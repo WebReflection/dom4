@@ -1,0 +1,5 @@
+src/*
+test/*
+utility/*
+node_modules/*
+Makefile
