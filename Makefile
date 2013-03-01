@@ -56,7 +56,7 @@ size:
 
 # hint built file
 hint:
-	node node_modules/jshint/bin/hint build/$(REPO).max.js
+	node node_modules/jshint/bin/jshint build/$(REPO).max.js
 
 # clean/remove build folder
 clean:

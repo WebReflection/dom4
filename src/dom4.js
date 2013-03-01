@@ -23,10 +23,11 @@
       'prepend', function prepend() {
         var firstChild = this.firstChild,
             node = mutationMacro(arguments);
-        firstChild ?
-          this.insertBefore(node, firstChild) :
-          this.appendChild(node)
-        ;
+        if (firstChild) {
+          this.insertBefore(node, firstChild);
+        } else {
+          this.appendChild(node);
+        }
       },
       'append', function append() {
         this.appendChild(mutationMacro(arguments));
@@ -44,10 +45,11 @@
             nextSibling = this.nextSibling,
             node = mutationMacro(arguments);
         if (parentNode) {
-          nextSibling ?
-            parentNode.insertBefore(node, nextSibling) :
-            parentNode.appendChild(node)
-          ;
+          if (nextSibling) {
+            parentNode.insertBefore(node, nextSibling);
+          } else {
+            parentNode.appendChild(node);
+          }
         }
       },
       'replace', function replace() {
