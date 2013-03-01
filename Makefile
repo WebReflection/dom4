@@ -18,9 +18,9 @@ AMD = $(VAR)
 # default build task
 build:
 	make var
-	make node
-	make amd
-	make test
+#	make node
+#	make amd
+#	make test
 #	make hint
 	make size
 
@@ -51,6 +51,7 @@ amd:
 
 size:
 	wc -c build/$(REPO).max.js
+	wc -c build/$(REPO).js
 	gzip -c build/$(REPO).js | wc -c
 
 # hint built file
