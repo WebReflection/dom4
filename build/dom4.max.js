@@ -21,6 +21,7 @@ THE SOFTWARE.
 
 */
 (function(window){
+  /* jshint loopfunc: true */
   // https://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#interface-element
   // https://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#dom-rootnode-prepend
   function textNodeIfString(node) {
