@@ -20,17 +20,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
-(function(window){
-  /* jshint loopfunc: true */
+(function(window){'use strict';
+  /* jshint loopfunc: true, noempty: false*/
   // https://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#interface-element
   // https://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#dom-rootnode-prepend
   function textNodeIfString(node) {
-    return typeof node === 'string' ? document.createTextNode(node) : node;
+    return typeof node === 'string' ? window.document.createTextNode(node) : node;
   }
   function mutationMacro(nodes) {
-    if (nodes.length === 1) return textNodeIfString(nodes[0]);
+    if (nodes.length === 1) {
+      return textNodeIfString(nodes[0]);
+    }
     for (var
-      fragment = document.createDocumentFragment(),
+      fragment = window.document.createDocumentFragment(),
       list = slice.call(nodes),
       i = 0; i < nodes.length; i++
     ) {
@@ -40,8 +42,11 @@ THE SOFTWARE.
   }
   for(var
     property,
-    document = window.document,
-    ElementPrototype = (window.Element || window.Node || window.HTMLElement).prototype,
+    DOMTokenList,
+    trim = /^\s+|\s+$/g,
+    spaces = /\s+/,
+    SPACE = '\x20',
+    ElementPrototype = (window.Element || window.HTMLElement || window.Node).prototype,
     properties = [
       'prepend', function prepend() {
         var firstChild = this.firstChild,
@@ -98,5 +103,57 @@ THE SOFTWARE.
     if (!(property in ElementPrototype)) {
       ElementPrototype[property] = properties[i - 1];
     }
+  }
+  if (!('classList' in ElementPrototype)) {
+    // http://www.w3.org/TR/domcore/#domtokenlist
+    DOMTokenList = function (node) {
+      var classes = node.className.replace(trim, '').split(spaces);
+      classes.push.apply(this, classes);
+      this._ = node;
+    };
+    DOMTokenList.prototype = {
+      length: 0,
+      add: function add(className) {
+        for(var
+          classes = className.toLowerCase().replace(trim, '').split(spaces),
+          push = classes.push,
+          j = 0; j < classes.length; j++
+        ) {
+          if (!this.contains(classes[j])) {
+            push.call(this, classes[j]);
+          }
+        }
+        this._.className = classes.join.call(this, SPACE);
+      },
+      contains: (function(indexOf){
+        return function contains(className) {
+          i = indexOf.call(this, className.toLowerCase());
+          return -1 < i;
+        };
+      }([].indexOf || function (className) {
+        i = this.length;
+        while(i-- && this[i] !== className){}
+        return i;
+      })),
+      remove: function remove(className) {
+        for(var
+          classes = className.toLowerCase().replace(trim, '').split(spaces),
+          splice = classes.splice,
+          j = 0; j < classes.length; j++
+        ) {
+          if (this.contains(classes[j])) {
+            splice.call(this, i, 1);
+          }
+        }
+        this._.className = classes.join.call(this, SPACE);
+      }
+    };
+    (Object.defineProperty || function (object, property, descriptor) {
+      object.__defineGetter__(property, descriptor.get);
+    })(ElementPrototype, 'classList', {
+      get: function () {
+        return new DOMTokenList(this);
+      }
+    });
   }
 }(window));

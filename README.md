@@ -14,6 +14,8 @@ The [implemented test](test/dom4.js) is conform to [current specifications](http
 
 If you need other polyfills too [have a look at DOM-shim repo](https://github.com/Raynos/DOM-shim).
 
+**Update** DOM4 `classList` has been added to this file 30th September 2013.
+
 The **DOM4** license is Mit Style
 
 ### Compatibility
