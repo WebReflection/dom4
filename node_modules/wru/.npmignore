@@ -1,0 +1,4 @@
+builder/*
+test/*
+src/*
+Makefile
