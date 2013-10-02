@@ -42,6 +42,7 @@ THE SOFTWARE.
   }
   for(var
     property,
+    verifyToken,
     DOMTokenList,
     trim = /^\s+|\s+$/g,
     spaces = /\s+/,
@@ -106,52 +107,73 @@ THE SOFTWARE.
   }
   if (!('classList' in ElementPrototype)) {
     // http://www.w3.org/TR/domcore/#domtokenlist
+    verifyToken = function (token) {
+      if (!token) {
+        throw 'SyntaxError';
+      } else if (spaces.test(token)) {
+        throw 'InvalidCharacterError';
+      }
+      return token;
+    };
     DOMTokenList = function (node) {
-      var classes = node.className.replace(trim, '').split(spaces);
-      classes.push.apply(this, classes);
+      properties.push.apply(
+        this,
+        node.className.replace(trim, '').split(spaces)
+      );
       this._ = node;
     };
     DOMTokenList.prototype = {
       length: 0,
-      add: function add(className) {
-        for(var
-          classes = className.toLowerCase().replace(trim, '').split(spaces),
-          push = classes.push,
-          j = 0; j < classes.length; j++
-        ) {
-          if (!this.contains(classes[j])) {
-            push.call(this, classes[j]);
+      add: function add() {
+        for(var j = 0, token; j < arguments.length; j++) {
+          token = arguments[j];
+          if(!this.contains(token)) {
+            properties.push.call(this, property);
           }
         }
-        this._.className = classes.join.call(this, SPACE);
+        this._.className = '' + this;
       },
       contains: (function(indexOf){
-        return function contains(className) {
-          i = indexOf.call(this, className.toLowerCase());
+        return function contains(token) {
+          i = indexOf.call(this, property = verifyToken(token));
           return -1 < i;
         };
-      }([].indexOf || function (className) {
+      }([].indexOf || function (token) {
         i = this.length;
-        while(i-- && this[i] !== className){}
+        while(i-- && this[i] !== token){}
         return i;
       })),
-      remove: function remove(className) {
-        for(var
-          classes = className.toLowerCase().replace(trim, '').split(spaces),
-          splice = classes.splice,
-          j = 0; j < classes.length; j++
-        ) {
-          if (this.contains(classes[j])) {
-            splice.call(this, i, 1);
+      item: function item(i) {
+        return this[i] || null;
+      },
+      remove: function remove() {
+        for(var j = 0, token; j < arguments.length; j++) {
+          token = arguments[j];
+          if(this.contains(token)) {
+            properties.splice.call(this, i, 1);
           }
         }
-        this._.className = classes.join.call(this, SPACE);
+        this._.className = '' + this;
+      },
+      toggle: function toggle(token, force) {
+        if (this.contains(token)) {
+          if (!force) {
+            // force is not true (either false or omitted)
+            this.remove(token);
+          }
+        } else if(force) {
+          this.add(token);
+        }
+        return !!force;
+      },
+      toString: function toString() {
+        return properties.join.call(this, SPACE);
       }
     };
     (Object.defineProperty || function (object, property, descriptor) {
       object.__defineGetter__(property, descriptor.get);
     })(ElementPrototype, 'classList', {
-      get: function () {
+      get: function get() {
         return new DOMTokenList(this);
       }
     });
