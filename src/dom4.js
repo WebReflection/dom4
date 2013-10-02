@@ -25,6 +25,17 @@
     trim = /^\s+|\s+$/g,
     spaces = /\s+/,
     SPACE = '\x20',
+    toggle = function toggle(token, force) {
+      if (this.contains(token)) {
+        if (!force) {
+          // force is not true (either false or omitted)
+          this.remove(token);
+        }
+      } else if(force) {
+        this.add(token);
+      }
+      return !!force;
+    },
     ElementPrototype = (window.Element || window.HTMLElement || window.Node).prototype,
     properties = [
       'prepend', function prepend() {
@@ -83,8 +94,10 @@
       ElementPrototype[property] = properties[i - 1];
     }
   }
-  if (!('classList' in ElementPrototype)) {
-    // iOS 5.1 has completely screwed this property
+  // iOS 5.1 has completely screwed this property
+  // classList in ElementPrototype is false
+  // but it's actually there as getter
+  if (!('classList' in document.documentElement)) {
     // http://www.w3.org/TR/domcore/#domtokenlist
     verifyToken = function (token) {
       if (!token) {
@@ -137,17 +150,7 @@
         }
         this._.className = '' + this;
       },
-      toggle: function toggle(token, force) {
-        if (this.contains(token)) {
-          if (!force) {
-            // force is not true (either false or omitted)
-            this.remove(token);
-          }
-        } else if(force) {
-          this.add(token);
-        }
-        return !!force;
-      },
+      toggle: toggle,
       toString: function toString() {
         return properties.join.call(this, SPACE);
       }
@@ -160,5 +163,26 @@
       },
       set: function(){}
     });
+  } else {
+    // iOS 5.1 does not support multiple add or remove
+    // trying to detect and fix that in here
+    DOMTokenList = document.createElement('div').classList;
+    DOMTokenList.add('a', 'b');
+    if ('a\x20b' != DOMTokenList) {
+      // no other way to reach original methods in iOS 5.1
+      ElementPrototype = DOMTokenList.constructor.prototype;
+      verifyToken = function (original) {
+        return function () {
+          var i = 0;
+          while (i < arguments.length) {
+            original.call(this, arguments[i++]);
+          }
+        };
+      };
+      ElementPrototype.add = verifyToken(ElementPrototype.add);
+      ElementPrototype.remove = verifyToken(ElementPrototype.remove);
+      // toggle is broken too ^_^ ... let's fix it
+      ElementPrototype.toggle = toggle;
+    }
   }
 }(window));
