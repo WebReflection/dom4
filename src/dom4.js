@@ -84,6 +84,7 @@
     }
   }
   if (!('classList' in ElementPrototype)) {
+    // iOS 5.1 has completely screwed this property
     // http://www.w3.org/TR/domcore/#domtokenlist
     verifyToken = function (token) {
       if (!token) {
@@ -94,10 +95,13 @@
       return token;
     };
     DOMTokenList = function (node) {
-      properties.push.apply(
-        this,
-        node.className.replace(trim, '').split(spaces)
-      );
+      var className = node.className.replace(trim, '');
+      if (className.length) {
+        properties.push.apply(
+          this,
+          className.split(spaces)
+        );
+      }
       this._ = node;
     };
     DOMTokenList.prototype = {
@@ -153,7 +157,8 @@
     })(ElementPrototype, 'classList', {
       get: function get() {
         return new DOMTokenList(this);
-      }
+      },
+      set: function(){}
     });
   }
 }(window));
