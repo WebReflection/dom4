@@ -173,6 +173,7 @@ wru.test([
     test: function () {
       var div = create('div'),
           classList = div.classList;
+      alert(classList);
       wru.assert('no tokens', classList.length === 0);
       div.className = 'a b c';
       classList = div.classList;
