@@ -192,10 +192,10 @@ THE SOFTWARE.
     DOMTokenList.add('a', 'b');
     if ('a\x20b' != DOMTokenList) {
       // no other way to reach original methods in iOS 5.1
-      ElementPrototype = DOMTokenList.constructor.prototype;
-      if (!('add' in ElementPrototype)) {
-        alert(window.DOMTokenList.prototype.add);
-      }
+      ElementPrototype = (
+        window.DOMTokenList ||
+        DOMTokenList.constructor
+      ).prototype;
       verifyToken = function (original) {
         return function () {
           var i = 0;
