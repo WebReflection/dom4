@@ -36,9 +36,10 @@
         <span class="blc"></span><span class="trc"></span>
         </div>
         <article class="markdown-body">
-          <h1>DOM4</h1>
+          <h1>
+<a name="dom4" class="anchor" href="#dom4"><span class="octicon octicon-link"></span></a>DOM4</h1>
 
-<p>This is just a fully tested and covered polyfill for <a href="https://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#interface-element">new DOM Level 4 entries</a></p>
+<p>This is a <a href="http://webreflection.github.io/dom4/test/">fully tested</a> and covered polyfill for <a href="https://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#interface-element">new DOM Level 4 entries</a></p>
 
 <ul>
 <li>Element#prepend()</li>
@@ -47,22 +48,46 @@
 <li>Element#after()</li>
 <li>Element#replace()</li>
 <li>Element#remove()</li>
-</ul><p>The <a href="test/">implemented test</a> is conform to <a href="https://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#dom-rootnode-prepend">current specifications</a>.</p>
+</ul><p>The <a href="test/dom4.js">implemented test</a> is conform to <a href="https://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#dom-rootnode-prepend">current specifications</a>.</p>
 
-<p>If you need other polyfills too <a href="https://github.com/Raynos/DOM-shim">have a look at DOM-shim repo</a>.</p>
+<p>Latest version includes tested specs for <a href="http://www.w3.org/TR/dom/#domtokenlist">classList</a>, included forced fixes for iOS 5.1 and its early implementation, and <a href="http://www.w3.org/TR/dom/#customevent">CustomEvent</a> for all browsers.</p>
 
 <p>The <strong>DOM4</strong> license is Mit Style</p>
+
+<p>If you need other polyfills too <a href="https://github.com/Raynos/DOM-shim">have a look at another DOM-shim repo</a>.</p>
+
+<h3>
+<a name="compatibility" class="anchor" href="#compatibility"><span class="octicon octicon-link"></span></a>Compatibility</h3>
+
+<p>Theoretically compatible with all browsers you know that are truly used these days, here a list:</p>
+
+<ul>
+<li>Android 2.1+</li>
+<li>Safari Mobile since iOS 3.0</li>
+<li>Opera Mobile</li>
+<li>Midori and probably any WebKit based</li>
+<li>Chrome Mobile and Desktop</li>
+<li>Firefox Mobile and Desktop</li>
+<li>IE8+ for Desktop and IE Mobile 9 or greater.</li>
+</ul><p>It's way easier if you tell me which browser in a current relevant market share is not supported :-)</p>
+
+<p>For <strong>IE8</strong> only it's recommended to include <a href="https://github.com/WebReflection/ie8#ie8">ie8</a> script before <code>dom4</code> or <code>CustomEvent</code>, <code>addEventListener</code>, and <code>dispatchEvent</code> won't work as expected.</p>
+
+<h3>
+<a name="which-file" class="anchor" href="#which-file"><span class="octicon octicon-link"></span></a>Which File</h3>
+
+<p>The <a href="build/dom4.js">minified version is here</a>, while the <a href="build/dom4.max.js">max one here</a>. If you want to test directly <a href="http://webreflection.github.com/dom4/test/">try this page</a>, it should be green.</p>
         </article>
       </div>
     </div>
     <footer>
       <div class="owner">
-      <p><a href="https://github.com/WebReflection" class="avatar"><img src="https://secure.gravatar.com/avatar/799a8a6502aff3268519382ea2837d4b?s=30&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" width="48" height="48"/></a> <a href="https://github.com/WebReflection">WebReflection</a> maintains <a href="https://github.com/WebReflection/dom4">Dom4</a></p>
+      <p><a href="https://github.com/WebReflection" class="avatar"><img src="https://2.gravatar.com/avatar/799a8a6502aff3268519382ea2837d4b?d=https%3A%2F%2Fidenticons.github.com%2Fcbd50311b4c3b17dbfd5b3ab0096c145.png&amp;s=30" width="48" height="48"/></a> <a href="https://github.com/WebReflection">WebReflection</a> maintains <a href="https://github.com/WebReflection/dom4">Dom4</a></p>
 
 
       </div>
       <div class="creds">
-        <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a><br/>theme by <a href="http://twitter.com/jonrohan/">Jon Rohan</a></small>
+        <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a><br/>theme by <a href="https://twitter.com/jonrohan/">Jon Rohan</a></small>
       </div>
     </footer>
   </div>
