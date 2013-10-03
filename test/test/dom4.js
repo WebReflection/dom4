@@ -187,7 +187,8 @@ wru.test([
     test: function () {
       var div = create('div'),
           classList = div.classList;
-      wru.assert('returns null', classList.item(0) === null);    
+      wru.assert('returns null', classList.item(0) === null);
+      // ASHA returns empty string in here o_O
       wru.assert('returns falsy', !classList[0]);
       classList.add('z');
       wru.assert('returns z', classList.item(0) === 'z');    
