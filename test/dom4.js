@@ -273,5 +273,61 @@ wru.test([
       div.className = 'a\x20b\x20c\x20d';
       wru.assert('same as classname', div.className == div.classList);
     }
+  }, {
+    name: 'CustomEvent',
+    test: function () {
+      var
+        detail = {},
+        e = new CustomEvent('type')
+      ;
+      wru.assert('right type', e.type === 'type');
+      wru.assert('detail not attached', e.detail === null);
+      wru.assert('not cancelable', e.cancelable === false);
+      wru.assert('not bubbling', e.bubbles === false);
+      e.initCustomEvent('retype', true, true, detail);
+      // TODO: WTF should happen here ?
+      //  FF says type, other redefine ergardless
+      //  wru.assert('right type', e.type === 'retype');
+      wru.assert('detail attached', e.detail === detail);
+      wru.assert('not cancelable', e.cancelable === true);
+      wru.assert('not bubbling', e.bubbles === true);
+      e = new CustomEvent('other-type', {
+        cancelable: true,
+        bubbles: true,
+        detail: detail
+      });
+      wru.assert('right type', e.type === 'other-type');
+      wru.assert('detail attached', e.detail === detail);
+      wru.assert('not cancelable', e.cancelable === true);
+      wru.assert('not bubbling', e.bubbles === true);
+    }
+  }, {
+    name: 'CustomEvent#initCustomEvent',
+    test: function () {
+      try {
+        new CustomEvent();
+      } catch(e) {
+        wru.assert('expected');
+        e = new CustomEvent('type only');
+        wru.assert('right type', e.type === 'type only');
+        wru.assert('detail not attached', e.detail === null);
+        wru.assert('not cancelable', e.cancelable === false);
+        wru.assert('not bubbling', e.bubbles === false);
+        e.initCustomEvent(e.type, true, true, 123);
+        wru.assert('still right type', e.type === 'type only');
+        wru.assert('detail attached', e.detail === 123);
+        wru.assert('not cancelable', e.cancelable === true);
+        wru.assert('not bubbling', e.bubbles === true);
+      }
+    }
+  }, {
+    name: 'CustomEvent is dispatchable',
+    test: function () {
+      var detail = {};
+      document.addEventListener('what:ever', wru.async(function (e) {
+        wru.assert('right detail', e.detail === detail);
+      }));
+      document.dispatchEvent(new CustomEvent('what:ever', {detail: detail}));
+    }
   }
 ]);

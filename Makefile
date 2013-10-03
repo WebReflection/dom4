@@ -31,6 +31,7 @@ var:
 	node node_modules/uglify-js/bin/uglifyjs --verbose build/no-copy.$(REPO).max.js >build/no-copy.$(REPO).js
 	cat template/license.before LICENSE.txt template/license.after build/no-copy.$(REPO).max.js >build/$(REPO).max.js
 	cat template/copyright build/no-copy.$(REPO).js >build/$(REPO).js
+	cp ie8/build/ie8.js build/ie8.js
 	rm build/no-copy.$(REPO).max.js
 	rm build/no-copy.$(REPO).js
 

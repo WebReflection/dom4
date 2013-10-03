@@ -1,7 +1,6 @@
 (function(window){'use strict';
   /* jshint loopfunc: true, noempty: false*/
-  // https://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#interface-element
-  // https://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#dom-rootnode-prepend
+  // http://www.w3.org/TR/dom/#element
   function textNodeIfString(node) {
     return typeof node === 'string' ? window.document.createTextNode(node) : node;
   }
@@ -94,6 +93,7 @@
       ElementPrototype[property] = properties[i - 1];
     }
   }
+  // http://www.w3.org/TR/dom/#domtokenlist
   // iOS 5.1 has completely screwed this property
   // classList in ElementPrototype is false
   // but it's actually there as getter
@@ -185,4 +185,58 @@
       ElementPrototype.toggle = toggle;
     }
   }
+
+  // http://www.w3.org/TR/dom/#customevent
+  try{new window.CustomEvent('?')}catch(o_O){
+    window.CustomEvent = function(
+      eventName,
+      defaultInitDict
+    ){
+
+      // the infamous substitute
+      function CustomEvent(type, eventInitDict) {
+        var event = document.createEvent(eventName);
+        if (typeof type != 'string') {
+          throw new Error('An event name must be provided');
+        }
+        if (eventName == 'Event') {
+          event.initCustomEvent = initCustomEvent;
+        }
+        if (eventInitDict == null) {
+          eventInitDict = defaultInitDict;
+        }
+        event.initCustomEvent(
+          eventInitDict.bubbles,
+          eventInitDict.cancelable,
+          eventInitDict.detail
+        );
+        return event;
+      }
+
+      // attached at runtime
+      function initCustomEvent(
+        type, bubbles, cancelable, detail
+      ) {
+        this.initEvent(type, bubbles, cancelable);
+        this.detail = detail;
+      }
+
+      // that's it
+      return CustomEvent;
+    }(
+      // is this IE9 or IE10 ?
+      // where CustomEvent is there
+      // but not usable as construtor ?
+      window.CustomEvent ?
+        // use the CustomEvent interface in such case
+        'CustomEvent' : 'Event',
+        // otherwise the common compatible one
+      {
+        bubbles: false,
+        cancelable: false,
+        detail: null
+      }
+    );
+  }
+
 }(window));
