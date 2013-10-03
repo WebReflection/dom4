@@ -194,7 +194,7 @@ THE SOFTWARE.
       // no other way to reach original methods in iOS 5.1
       ElementPrototype = DOMTokenList.constructor.prototype;
       if (!('add' in ElementPrototype)) {
-        alert(window.DOMTokenList);
+        alert(window.DOMTokenList.prototype.add);
       }
       verifyToken = function (original) {
         return function () {
