@@ -305,21 +305,16 @@ wru.test([
   }, {
     name: 'CustomEvent#initCustomEvent',
     test: function () {
-      try {
-        new CustomEvent();
-      } catch(e) {
-        wru.assert('expected');
-        e = new CustomEvent('type only');
-        wru.assert('right type', e.type === 'type only');
-        wru.assert('detail not attached', e.detail === null);
-        wru.assert('not cancelable', e.cancelable === false);
-        wru.assert('not bubbling', e.bubbles === false);
-        e.initCustomEvent(e.type, true, true, 123);
-        wru.assert('still right type', e.type === 'type only');
-        wru.assert('detail attached', e.detail === 123);
-        wru.assert('not cancelable', e.cancelable === true);
-        wru.assert('not bubbling', e.bubbles === true);
-      }
+      e = new CustomEvent('type only');
+      wru.assert('right type', e.type === 'type only');
+      wru.assert('detail not attached', e.detail === null);
+      wru.assert('not cancelable', e.cancelable === false);
+      wru.assert('not bubbling', e.bubbles === false);
+      e.initCustomEvent(e.type, true, true, 123);
+      wru.assert('still right type', e.type === 'type only');
+      wru.assert('detail attached', e.detail === 123);
+      wru.assert('not cancelable', e.cancelable === true);
+      wru.assert('not bubbling', e.bubbles === true);
     }
   }, {
     name: 'CustomEvent is dispatchable',
