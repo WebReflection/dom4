@@ -194,6 +194,7 @@ THE SOFTWARE.
       try {
         // no other way to reach original methods in iOS 5.1
         ElementPrototype = DOMTokenList.constructor.prototype;
+        alert(ElementPrototype);
       } catch(ASHA) {
         alert(ASHA);
       }
