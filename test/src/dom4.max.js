@@ -191,13 +191,8 @@ THE SOFTWARE.
     DOMTokenList = document.createElement('div').classList;
     DOMTokenList.add('a', 'b');
     if ('a\x20b' != DOMTokenList) {
-      try {
-        // no other way to reach original methods in iOS 5.1
-        ElementPrototype = DOMTokenList.constructor.prototype;
-        alert(ElementPrototype);
-      } catch(ASHA) {
-        alert(ASHA);
-      }
+      // no other way to reach original methods in iOS 5.1
+      ElementPrototype = DOMTokenList.constructor.prototype;
       verifyToken = function (original) {
         return function () {
           var i = 0;
@@ -206,7 +201,9 @@ THE SOFTWARE.
           }
         };
       };
+      alert(ElementPrototype.add);
       ElementPrototype.add = verifyToken(ElementPrototype.add);
+      alert(ElementPrototype.add);
       ElementPrototype.remove = verifyToken(ElementPrototype.remove);
       // toggle is broken too ^_^ ... let's fix it
       ElementPrototype.toggle = toggle;
