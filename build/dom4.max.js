@@ -228,6 +228,7 @@ THE SOFTWARE.
           eventInitDict = defaultInitDict;
         }
         event.initCustomEvent(
+          type,
           eventInitDict.bubbles,
           eventInitDict.cancelable,
           eventInitDict.detail

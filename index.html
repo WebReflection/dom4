@@ -33,7 +33,7 @@
             )(wru);
           }
           this.onload = function () {
-            for(var i = 0; i < TESTS.length; load('test/' + TESTS[i++] + '.js'));
+            for(var i = 0; i < TESTS.length; load('test/' + TESTS[i++] + '.js?' + Math.random()));
             wru.test = test;
             wru.test(all);
           };
