@@ -164,13 +164,17 @@
       set: function(){}
     });
   } else {
-    // iOS 5.1 does not support multiple add or remove
+    // iOS 5.1 and Nokia ASHA do not support multiple add or remove
     // trying to detect and fix that in here
     DOMTokenList = document.createElement('div').classList;
     DOMTokenList.add('a', 'b');
     if ('a\x20b' != DOMTokenList) {
       // no other way to reach original methods in iOS 5.1
       ElementPrototype = DOMTokenList.constructor.prototype;
+      if (!('add' in ElementPrototype)) {
+        // ASHA double fails in here
+        ElementPrototype = window.DOMTokenList.prototype;
+      }
       verifyToken = function (original) {
         return function () {
           var i = 0;
