@@ -186,12 +186,13 @@ THE SOFTWARE.
       set: function(){}
     });
   } else {
-    // iOS 5.1 does not support multiple add or remove
+    // iOS 5.1 and Nokia ASHA do not support multiple add or remove
     // trying to detect and fix that in here
     DOMTokenList = document.createElement('div').classList;
     DOMTokenList.add('a', 'b');
-    alert(DOMTokenList);
     if ('a\x20b' != DOMTokenList) {
+      alert(DOMTokenList.constructor);
+      alert(DOMTokenList.constructor.prototype);
       // no other way to reach original methods in iOS 5.1
       ElementPrototype = DOMTokenList.constructor.prototype;
       verifyToken = function (original) {
