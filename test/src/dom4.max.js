@@ -186,6 +186,7 @@ THE SOFTWARE.
       set: function(){}
     });
   } else {
+    try{
     // iOS 5.1 does not support multiple add or remove
     // trying to detect and fix that in here
     DOMTokenList = document.createElement('div').classList;
@@ -205,7 +206,9 @@ THE SOFTWARE.
       ElementPrototype.remove = verifyToken(ElementPrototype.remove);
       // toggle is broken too ^_^ ... let's fix it
       ElementPrototype.toggle = toggle;
-      alert(ElementPrototype.add);
+    }
+    }catch(e) {
+      alert(e);
     }
   }
 
