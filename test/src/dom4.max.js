@@ -201,7 +201,7 @@ THE SOFTWARE.
           }
         };
       };
-      alert(ElementPrototype.add);
+      alert(DOMTokenList.constructor.add);
       ElementPrototype.add = verifyToken(ElementPrototype.add);
       alert(ElementPrototype.add);
       ElementPrototype.remove = verifyToken(ElementPrototype.remove);
