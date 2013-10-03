@@ -205,6 +205,7 @@ THE SOFTWARE.
       ElementPrototype.remove = verifyToken(ElementPrototype.remove);
       // toggle is broken too ^_^ ... let's fix it
       ElementPrototype.toggle = toggle;
+      alert(ElementPrototype.add);
     }
   }
 
