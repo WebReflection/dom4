@@ -191,10 +191,12 @@ THE SOFTWARE.
     DOMTokenList = document.createElement('div').classList;
     DOMTokenList.add('a', 'b');
     if ('a\x20b' != DOMTokenList) {
-      alert(DOMTokenList.constructor);
-      alert(DOMTokenList.constructor.prototype);
-      // no other way to reach original methods in iOS 5.1
-      ElementPrototype = DOMTokenList.constructor.prototype;
+      try {
+        // no other way to reach original methods in iOS 5.1
+        ElementPrototype = DOMTokenList.constructor.prototype;
+      } catch(ASHA) {
+        alert(ASHA);
+      }
       verifyToken = function (original) {
         return function () {
           var i = 0;
