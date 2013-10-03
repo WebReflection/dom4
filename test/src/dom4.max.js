@@ -196,6 +196,7 @@ THE SOFTWARE.
         window.DOMTokenList ||
         DOMTokenList.constructor
       ).prototype;
+      alert(ElementPrototype);
       verifyToken = function (original) {
         return function () {
           var i = 0;
