@@ -187,6 +187,7 @@ wru.test([
     test: function () {
       var div = create('div'),
           classList = div.classList;
+      alert(classList[0]);
       wru.assert('returns null', classList.item(0) === null);    
       wru.assert('returns nullish', classList[0] == null);
       classList.add('z');

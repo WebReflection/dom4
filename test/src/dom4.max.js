@@ -194,6 +194,7 @@ THE SOFTWARE.
       // no other way to reach original methods in iOS 5.1
       ElementPrototype = DOMTokenList.constructor.prototype;
       if (!('add' in ElementPrototype)) {
+        // ASHA double fails in here
         ElementPrototype = window.DOMTokenList.prototype;
       }
       verifyToken = function (original) {
