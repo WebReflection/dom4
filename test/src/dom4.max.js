@@ -119,7 +119,7 @@ THE SOFTWARE.
   // iOS 5.1 has completely screwed this property
   // classList in ElementPrototype is false
   // but it's actually there as getter
-  if (!('classList' in document.documentElement)) {
+  if (!('classList' in document.documentElement)) {alert('if');
     // http://www.w3.org/TR/domcore/#domtokenlist
     verifyToken = function (token) {
       if (!token) {
@@ -185,8 +185,7 @@ THE SOFTWARE.
       },
       set: function(){}
     });
-  } else {
-    try{
+  } else {alert('else');
     // iOS 5.1 does not support multiple add or remove
     // trying to detect and fix that in here
     DOMTokenList = document.createElement('div').classList;
@@ -206,9 +205,6 @@ THE SOFTWARE.
       ElementPrototype.remove = verifyToken(ElementPrototype.remove);
       // toggle is broken too ^_^ ... let's fix it
       ElementPrototype.toggle = toggle;
-    }
-    }catch(e) {
-      alert(e);
     }
   }
 
