@@ -28,6 +28,7 @@ Theoretically compatible with all browsers you know that are truly used these da
   * Chrome Mobile and Desktop
   * Firefox Mobile and Desktop
   * IE8+ for Desktop and IE Mobile 9 or greater.
+  * Nokia Xpress Browser for ASHA Platform
 
 It's way easier if you tell me which browser in a current relevant market share is not supported :-)
 
