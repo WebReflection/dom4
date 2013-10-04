@@ -57,7 +57,7 @@ THE SOFTWARE.
       }
       return !!force;
     },
-    ElementPrototype = (window.Element || window.HTMLElement || window.Node).prototype,
+    ElementPrototype = (window.Element || window.Node || window.HTMLElement).prototype,
     properties = [
       'prepend', function prepend() {
         var firstChild = this.firstChild,
