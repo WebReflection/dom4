@@ -12,7 +12,7 @@ This is a [fully tested](http://webreflection.github.io/dom4/test/) and covered 
 
 The [implemented test](test/dom4.js) is conform to [current specifications](https://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#dom-rootnode-prepend).
 
-Latest version includes tested specs for [classList](http://www.w3.org/TR/dom/#domtokenlist), included forced fixes for iOS 5.1 and its early implementation, and [CustomEvent](http://www.w3.org/TR/dom/#customevent) for all browsers.
+Latest version includes tested specs for [classList](http://www.w3.org/TR/dom/#domtokenlist), included forced fixes for iOS 5.1 and Nokia ASHA Xpress Browser and early implementations plus [CustomEvent](http://www.w3.org/TR/dom/#customevent) constructor for all browsers.
 
 The **DOM4** license is Mit Style
 
