@@ -325,5 +325,12 @@ wru.test([
       }));
       document.dispatchEvent(new CustomEvent('what:ever', {detail: detail}));
     }
+  },{
+    name: 'adding twice same class does NOT results in duplicated',
+    test: function () {
+      var div = create('div');
+      div.classList.add('a', 'a');
+      wru.assert('no duplicated args', div.className === 'a');
+    }
   }
 ]);
