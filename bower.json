@@ -1,0 +1,15 @@
+{
+    "name": "DOM4",
+    "description": "new DOM Level 4 entries",
+    "version": "0.1.0",
+    "main": "build/dom4.js",
+    "ignore": [
+        "test",
+        "ie8",
+        "node_modules",
+        "src",
+        "template",
+        "index.html",
+        "Makefile"
+    ]
+}
