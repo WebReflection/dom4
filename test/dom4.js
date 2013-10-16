@@ -332,5 +332,13 @@ wru.test([
       div.classList.add('a', 'a');
       wru.assert('no duplicated args', div.className === 'a');
     }
+  },{
+    name: 'Element#matches',
+    test: function () {
+      wru.assert('works even on HTML', document.documentElement.matches('html'));
+      wru.assert('returns false when wrong', !document.createElement('div').matches('whatever'));
+      // WARNING, this is not normalized at all across browsers even if native
+      // wru.assert('works with non in DOM nodes', document.createElement('div').matches('div'));
+    }
   }
 ]);

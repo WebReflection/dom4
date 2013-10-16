@@ -1,4 +1,4 @@
-.PHONY: var node amd size hint clean test web preview pages dependencies
+.PHONY: build var node amd size hint clean test web preview pages dependencies
 
 # repository name
 REPO = dom4

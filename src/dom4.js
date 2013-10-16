@@ -18,6 +18,15 @@
     return fragment;
   }
   for(var
+    indexOf = [].indexOf || function indexOf(value){
+      var length = this.length;
+      while(length--) {
+        if (this[length] === value) {
+          break;
+        }
+      }
+      return length;
+    },
     property,
     verifyToken,
     DOMTokenList,
@@ -37,6 +46,20 @@
     },
     ElementPrototype = (window.Element || window.Node || window.HTMLElement).prototype,
     properties = [
+      'matches', (
+        ElementPrototype.matchesSelector ||
+        ElementPrototype.webkitMatchesSelector ||
+        ElementPrototype.khtmlMatchesSelector ||
+        ElementPrototype.mozMatchesSelector ||
+        ElementPrototype.msMatchesSelector ||
+        ElementPrototype.oMatchesSelector ||
+        function matches(selector) {
+          return !!parentNode && -1 < indexOf.call(
+            parentNode.querySelector(selector),
+            this
+          );
+        }
+      ),
       'prepend', function prepend() {
         var firstChild = this.firstChild,
             node = mutationMacro(arguments);
