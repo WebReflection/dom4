@@ -54,8 +54,9 @@
         ElementPrototype.msMatchesSelector ||
         ElementPrototype.oMatchesSelector ||
         function matches(selector) {
+          var parentNode = this.parentNode;
           return !!parentNode && -1 < indexOf.call(
-            parentNode.querySelector(selector),
+            parentNode.querySelectorAll(selector),
             this
           );
         }

@@ -335,8 +335,29 @@ wru.test([
   },{
     name: 'Element#matches',
     test: function () {
+      var
+        indexOf = [].indexOf || function indexOf(value){
+          var length = this.length;
+          while(length--) {
+            if (this[length] === value) {
+              break;
+            }
+          }
+          return length;
+        };
+      function matches(selector) {
+        var parentNode = this.parentNode;
+        return !!parentNode && -1 < indexOf.call(
+          parentNode.querySelectorAll(selector),
+          this
+        );
+      }
       wru.assert('works even on HTML', document.documentElement.matches('html'));
       wru.assert('returns false when wrong', !document.createElement('div').matches('whatever'));
+      wru.assert('even the shim works with HTML', matches.call(document.documentElement, 'html'));
+      wru.assert('even the shim returns false when does not match', !matches.call(
+        document.createElement('div'), 'whatever'
+      ));
       // WARNING, this is not normalized at all across browsers even if native
       // wru.assert('works with non in DOM nodes', document.createElement('div').matches('div'));
     }
