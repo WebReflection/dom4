@@ -29,6 +29,7 @@ Theoretically compatible with all browsers you know that are truly used these da
   * Firefox Mobile and Desktop
   * IE8+ for Desktop and IE Mobile 9 or greater.
   * Nokia Xpress Browser for ASHA Platform
+  * Silk Browser - Fire OS 3.0
 
 It's way easier if you tell me which browser in a current relevant market share is not supported :-)
 

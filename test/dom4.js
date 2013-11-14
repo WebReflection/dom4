@@ -282,7 +282,7 @@ wru.test([
         e = new CustomEvent('type')
       ;
       wru.assert('right type', e.type === 'type');
-      wru.assert('detail not attached', e.detail === null);
+      wru.assert('detail not attached', e.detail == null);
       wru.assert('not cancelable', e.cancelable === false);
       wru.assert('not bubbling', e.bubbles === false);
       e.initCustomEvent('retype', true, true, detail);
@@ -307,7 +307,7 @@ wru.test([
     test: function () {
       e = new CustomEvent('type only');
       wru.assert('right type', e.type === 'type only');
-      wru.assert('detail not attached', e.detail === null);
+      wru.assert('detail not attached', e.detail == null);
       wru.assert('not cancelable', e.cancelable === false);
       wru.assert('not bubbling', e.bubbles === false);
       e.initCustomEvent(e.type, true, true, 123);
