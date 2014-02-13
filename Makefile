@@ -83,6 +83,7 @@ pages:
 	make var
 	mkdir -p ~/tmp
 	mkdir -p ~/tmp/$(REPO)
+	cp .gitmodules ~/tmp/$(REPO)
 	cp -rf src ~/tmp/$(REPO)
 	cp -rf build/* ~/tmp/$(REPO)/src/
 	cp -rf test ~/tmp/$(REPO)
@@ -91,6 +92,8 @@ pages:
 	mkdir -p test
 	rm -rf test
 	cp -rf ~/tmp/$(REPO) test
+	git submodule init
+	git submodule update
 	git add .
 	git commit -m 'automatic test generator'
 	git push
