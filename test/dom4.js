@@ -266,6 +266,11 @@ wru.test([
         classList.toggle('z', true) === true && classList.contains('z'));
       wru.assert('If force is omitted same as true',
         classList.toggle('t', true) === true && classList.contains('t'));
+      
+      wru.assert('If token is NOT in tokens append token to tokens and return true.',
+        classList.toggle('not-there') === true && classList.contains('not-there'));
+      wru.assert('If token is in tokens and force is either not passed or is false, remove token from tokens and return false',
+        classList.toggle('not-there') === false && !classList.contains('not-there'));
     }
   }, {
     name: 'DOMTokenList#toString()',
