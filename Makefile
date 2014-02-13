@@ -92,6 +92,7 @@ pages:
 	mkdir -p test
 	rm -rf test
 	cp -rf ~/tmp/$(REPO) test
+	mv test/.gitmodules .gitmodules
 	git submodule init
 	git submodule update
 	git add .
