@@ -61,7 +61,8 @@ THE SOFTWARE.
           // force is not true (either false or omitted)
           this.remove(token);
         }
-      } else if(force) {
+      } else if(force === undefined || force) {
+        force = true;
         this.add(token);
       }
       return !!force;
