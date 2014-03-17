@@ -1,0 +1,9 @@
+src/*
+test/*
+template/*
+node_modules/*
+ie8/*
+build/*.amd.js
+Makefile
+index.html
+bower.json

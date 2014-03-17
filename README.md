@@ -12,9 +12,12 @@ This is a [fully tested](http://webreflection.github.io/dom4/test/) and covered 
 
 The [implemented test](test/dom4.js) is conform to [current specifications](https://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#dom-rootnode-prepend).
 
-Latest version includes tested specs for [classList](http://www.w3.org/TR/dom/#domtokenlist), included forced fixes for iOS 5.1 and Nokia ASHA Xpress Browser and early implementations plus [CustomEvent](http://www.w3.org/TR/dom/#customevent) constructor for all browsers.
+Other fixes/standardized behaviors include:
 
-The **DOM4** license is Mit Style
+  * [classList](http://www.w3.org/TR/dom/#domtokenlist), with forced fixes for iOS 5.1 and Nokia ASHA Xpress Browser and early implementations
+  * [CustomEvent](http://www.w3.org/TR/dom/#customevent) constructor for all browsers down to IE8
+
+The **DOM4** license is Mit Style.
 
 If you need other polyfills too [have a look at another DOM-shim repo](https://github.com/Raynos/DOM-shim).
 
@@ -30,6 +33,7 @@ Theoretically compatible with all browsers you know that are truly used these da
   * IE8+ for Desktop and IE Mobile 9 or greater.
   * Nokia Xpress Browser for ASHA Platform
   * Silk Browser - Fire OS 3.0
+  * PhantomJS can benefit from DOM4 too
 
 It's way easier if you tell me which browser in a current relevant market share is not supported :-)
 
