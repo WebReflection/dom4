@@ -18,6 +18,9 @@
     return fragment;
   }
   for(var
+    defineProperty = Object.defineProperty || function (object, property, descriptor) {
+      object.__defineGetter__(property, descriptor.get);
+    },
     indexOf = [].indexOf || function indexOf(value){
       var length = this.length;
       while(length--) {
@@ -27,6 +30,7 @@
       }
       return length;
     },
+    head,
     property,
     verifyToken,
     DOMTokenList,
@@ -180,9 +184,7 @@
         return properties.join.call(this, SPACE);
       }
     };
-    (Object.defineProperty || function (object, property, descriptor) {
-      object.__defineGetter__(property, descriptor.get);
-    })(ElementPrototype, 'classList', {
+    defineProperty(ElementPrototype, 'classList', {
       get: function get() {
         return new DOMTokenList(this);
       },
@@ -213,6 +215,17 @@
       // toggle is broken too ^_^ ... let's fix it
       ElementPrototype.toggle = toggle;
     }
+  }
+
+  if (!('head' in document)) {
+    defineProperty(document, 'head', {
+      enumerable: true,
+      get: function () {
+        return head || (
+          head = document.getElementsByTagName('head')[0]
+        );
+      }
+    });
   }
 
   // http://www.w3.org/TR/dom/#customevent

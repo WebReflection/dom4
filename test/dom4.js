@@ -19,6 +19,11 @@ wru.test([
       wru.assert('.remove()', div.remove);
     }
   },{
+    name: 'document.head',
+    test: function () {
+      wru.assert('found it', !!document.head);
+    }
+  },{
     name: 'prepend',
     test: function () {
       var div = create('div'),
