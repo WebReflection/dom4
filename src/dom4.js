@@ -219,7 +219,6 @@
 
   if (!('head' in document)) {
     defineProperty(document, 'head', {
-      enumerable: true,
       get: function () {
         return head || (
           head = document.getElementsByTagName('head')[0]
