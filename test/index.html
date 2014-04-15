@@ -24,18 +24,28 @@
           wru.test = function () {
             all = all.concat.apply(all, arguments);
           };
-          function load(file) {
+          function load(file, then) {
             var xhr = XHR();
             xhr.open('get', file, false);
+            xhr.onreadystatechange = function () {
+              if (xhr.readyState == 4) {
+                Function("wru", xhr.responseText.
+                  replace(/\/\/remove:[^\x00]*?\/\/:remove/g, '')
+                )(wru);
+                then();
+              }
+            };
             xhr.send(null);
-            Function("wru", xhr.responseText.
-              replace(/\/\/remove:[^\x00]*?\/\/:remove/g, '')
-            )(wru);
           }
           this.onload = function () {
-            for(var i = 0; i < TESTS.length; load('test/' + TESTS[i++] + '.js?' + Math.random()));
-            wru.test = test;
-            wru.test(all);
+            (function onload() {
+              if (TESTS.length) {
+                load('test/' + TESTS.shift() + '.js?' + Math.random(), onload);
+              } else {
+                wru.test = test;
+                wru.test(all);
+              }
+            }());
           };
         }</script>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
