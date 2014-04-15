@@ -27,10 +27,14 @@
           function load(file) {
             var xhr = XHR();
             xhr.open('get', file, false);
+            xhr.onreadystatechange = function () {
+              if (xhr.readyState == 4) {
+                Function("wru", xhr.responseText.
+                  replace(/\/\/remove:[^\x00]*?\/\/:remove/g, '')
+                )(wru);
+              }
+            };
             xhr.send(null);
-            Function("wru", xhr.responseText.
-              replace(/\/\/remove:[^\x00]*?\/\/:remove/g, '')
-            )(wru);
           }
           this.onload = function () {
             for(var i = 0; i < TESTS.length; load('test/' + TESTS[i++] + '.js?' + Math.random()));
