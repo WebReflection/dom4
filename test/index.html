@@ -26,7 +26,7 @@
           };
           function load(file, then) {
             var xhr = XHR();
-            xhr.open('get', file, false);
+            xhr.open('get', file, true);
             xhr.onreadystatechange = function () {
               if (xhr.readyState == 4) {
                 Function("wru", xhr.responseText.
