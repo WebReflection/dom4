@@ -26,9 +26,11 @@ If you need other polyfills too [have a look at another DOM-shim repo](https://g
 Theoretically compatible with all browsers you know that are truly used these days, here a list:
 
   * Android 2.1+
-  * Safari Mobile since iOS 3.0
-  * Opera Mobile
-  * Midori and probably any WebKit based
+  * Safari Mobile since iOS 3.0 and Desktop
+  * Opera Mobile, Mini, and Desktop
+  * Blackberry 7.1 and higher
+  * Samsung Bada 2 native Browser
+  * Midori and most likely all other WebKit based
   * Chrome Mobile and Desktop
   * Firefox Mobile and Desktop
   * IE8+ for Desktop and IE Mobile 9 or greater.
