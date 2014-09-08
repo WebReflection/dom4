@@ -1,3 +1,3 @@
 [submodule "ie8"]
 	path = ie8
-	url = git://github.com/WebReflection/ie8.git
+	url = https://github.com/WebReflection/ie8.git
