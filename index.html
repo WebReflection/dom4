@@ -6,8 +6,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen"/>
-  <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen">
+  <link rel="stylesheet" href="stylesheets/pygment_trac.css">
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
   <script type="text/javascript" src="javascripts/script.js"></script>
 
@@ -50,9 +50,16 @@
 <li>Element#remove()</li>
 </ul><p>The <a href="test/dom4.js">implemented test</a> is conform to <a href="https://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#dom-rootnode-prepend">current specifications</a>.</p>
 
-<p>Latest version includes tested specs for <a href="http://www.w3.org/TR/dom/#domtokenlist">classList</a>, included forced fixes for iOS 5.1 and its early implementation, and <a href="http://www.w3.org/TR/dom/#customevent">CustomEvent</a> for all browsers.</p>
+<p>Other fixes/standardized behaviors include:</p>
 
-<p>The <strong>DOM4</strong> license is Mit Style</p>
+<ul>
+<li>
+<a href="http://www.w3.org/TR/dom/#domtokenlist">classList</a>, with forced fixes for iOS 5.1 and Nokia ASHA Xpress Browser and early implementations</li>
+<li>
+<a href="http://www.w3.org/TR/dom/#customevent">CustomEvent</a> constructor for all browsers down to IE8</li>
+<li>
+<a href="http://www.w3.org/TR/dom/#dom-element-matches">Element#matches</a> utility to test elements against CSS selectors</li>
+</ul><p>The <strong>DOM4</strong> license is Mit Style.</p>
 
 <p>If you need other polyfills too <a href="https://github.com/Raynos/DOM-shim">have a look at another DOM-shim repo</a>.</p>
 
@@ -63,12 +70,17 @@
 
 <ul>
 <li>Android 2.1+</li>
-<li>Safari Mobile since iOS 3.0</li>
-<li>Opera Mobile</li>
-<li>Midori and probably any WebKit based</li>
+<li>Safari Mobile since iOS 3.0 and Desktop</li>
+<li>Opera Mobile, Mini, and Desktop</li>
+<li>Blackberry 7.1 and higher</li>
+<li>Samsung Bada 2 native Browser</li>
+<li>Midori and most likely all other WebKit based</li>
 <li>Chrome Mobile and Desktop</li>
 <li>Firefox Mobile and Desktop</li>
 <li>IE8+ for Desktop and IE Mobile 9 or greater.</li>
+<li>Nokia Xpress Browser for ASHA Platform</li>
+<li>Silk Browser - Fire OS 3.0</li>
+<li>PhantomJS can benefit from DOM4 too</li>
 </ul><p>It's way easier if you tell me which browser in a current relevant market share is not supported :-)</p>
 
 <p>For <strong>IE8</strong> only it's recommended to include <a href="https://github.com/WebReflection/ie8#ie8">ie8</a> script before <code>dom4</code> or <code>CustomEvent</code>, <code>addEventListener</code>, and <code>dispatchEvent</code> won't work as expected.</p>
@@ -82,12 +94,12 @@
     </div>
     <footer>
       <div class="owner">
-      <p><a href="https://github.com/WebReflection" class="avatar"><img src="https://2.gravatar.com/avatar/799a8a6502aff3268519382ea2837d4b?d=https%3A%2F%2Fidenticons.github.com%2Fcbd50311b4c3b17dbfd5b3ab0096c145.png&amp;s=30" width="48" height="48"/></a> <a href="https://github.com/WebReflection">WebReflection</a> maintains <a href="https://github.com/WebReflection/dom4">Dom4</a></p>
+      <p><a href="https://github.com/WebReflection" class="avatar"><img src="https://avatars3.githubusercontent.com/u/85749?v=2&amp;s=60" width="48" height="48"></a> <a href="https://github.com/WebReflection">WebReflection</a> maintains <a href="https://github.com/WebReflection/dom4">Dom4</a></p>
 
 
       </div>
       <div class="creds">
-        <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a><br/>theme by <a href="https://twitter.com/jonrohan/">Jon Rohan</a></small>
+        <small>This page generated using <a href="http://pages.github.com/">GitHub Pages</a><br>theme by <a href="https://twitter.com/jonrohan/">Jon Rohan</a></small>
       </div>
     </footer>
   </div>
