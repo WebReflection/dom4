@@ -1,6 +1,14 @@
 DOM4
 ====
 
+#### Now in cdnJS
+Many thanks to [cdnjs](http://www.cdnjs.com) for hosting this script. Following an example on how to include it.
+```html
+<script
+  src="//cdnjs.cloudflare.com/ajax/libs/dom4/1.0.1/dom4.js"
+>/* DOM4 */</script>
+```
+
 This is a [fully tested](http://webreflection.github.io/dom4/test/) and covered polyfill for [new DOM Level 4 entries](https://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#interface-element)
 
   * Element#prepend()
