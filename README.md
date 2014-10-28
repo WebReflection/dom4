@@ -9,16 +9,19 @@ Many thanks to [cdnjs](http://www.cdnjs.com) for hosting this script. Following 
 >/* DOM4 */</script>
 ```
 
-This is a [fully tested](http://webreflection.github.io/dom4/test/) and covered polyfill for [new DOM Level 4 entries](https://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#interface-element)
+This is a [fully tested](http://webreflection.github.io/dom4/test/) and covered polyfill for both [new DOM Level 4 parentNode entries](https://dom.spec.whatwg.org/#parentnode):
 
   * Element#prepend()
   * Element#append()
+
+And for [new DOM Level 4 childNode entries](https://dom.spec.whatwg.org/#childnode):
+
   * Element#before()
   * Element#after()
   * Element#replace()
   * Element#remove()
 
-The [implemented test](test/dom4.js) is conform to [current specifications](https://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#dom-rootnode-prepend).
+The [implemented test](test/dom4.js) is conform to current specifications.
 
 Other fixes/standardized behaviors include:
 
