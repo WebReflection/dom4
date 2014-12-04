@@ -9,6 +9,7 @@ Many thanks to [cdnjs](http://www.cdnjs.com) for hosting this script. Following 
 >/* DOM4 */</script>
 ```
 
+#### Features
 This is a [fully tested](http://webreflection.github.io/dom4/test/) and covered polyfill for both [new DOM Level 4 parentNode entries](https://dom.spec.whatwg.org/#parentnode):
 
   * Element#prepend()
