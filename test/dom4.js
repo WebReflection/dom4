@@ -371,5 +371,12 @@ wru.test([
       // WARNING, this is not normalized at all across browsers even if native
       // wru.assert('works with non in DOM nodes', document.createElement('div').matches('div'));
     }
+  },{
+    name: 'closest',
+    test: function () {
+      wru.assert('inclusive', document.body.closest('body') === document.body);
+      wru.assert('exclusive', document.body.closest('html') === document.documentElement);
+      wru.assert('nullable', document.body.closest('.null') === null);
+    }
   }
 ]);

@@ -66,6 +66,17 @@
           );
         }
       ),
+      'closest', function closest(selector) {
+        var parentNode = this, matches;
+        while (
+          // document has no .matches
+          (matches = parentNode && parentNode.matches) &&
+          !parentNode.matches(selector)
+        ) {
+          parentNode = parentNode.parentNode;
+        }
+        return matches ? parentNode : null;
+      },
       'prepend', function prepend() {
         var firstChild = this.firstChild,
             node = mutationMacro(arguments);
@@ -228,7 +239,7 @@
   }
 
   // http://www.w3.org/TR/dom/#customevent
-  try{new window.CustomEvent('?')}catch(o_O){
+  try{new window.CustomEvent('?');}catch(o_O){
     window.CustomEvent = function(
       eventName,
       defaultInitDict
@@ -236,6 +247,7 @@
 
       // the infamous substitute
       function CustomEvent(type, eventInitDict) {
+        /*jshint eqnull:true */
         var event = document.createEvent(eventName);
         if (typeof type != 'string') {
           throw new Error('An event name must be provided');
@@ -259,6 +271,7 @@
       function initCustomEvent(
         type, bubbles, cancelable, detail
       ) {
+        /*jshint validthis:true*/
         this.initEvent(type, bubbles, cancelable);
         this.detail = detail;
       }
