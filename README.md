@@ -28,6 +28,7 @@ Other fixes/standardized behaviors include:
   * [classList](http://www.w3.org/TR/dom/#domtokenlist), with forced fixes for iOS 5.1 and Nokia ASHA Xpress Browser and early implementations
   * [CustomEvent](http://www.w3.org/TR/dom/#customevent) constructor for all browsers down to IE8
   * [Element#matches](http://www.w3.org/TR/dom/#dom-element-matches) utility to test elements against CSS selectors
+  * [Element#closest](https://dom.spec.whatwg.org/#dom-element-closest) utility to find element inclusive ancestor via CSS selectors
 
 The **DOM4** license is Mit Style.
 
