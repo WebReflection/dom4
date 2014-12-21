@@ -7,3 +7,4 @@ build/*.amd.js
 Makefile
 index.html
 bower.json
+>README.md.*

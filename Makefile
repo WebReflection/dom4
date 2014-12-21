@@ -31,7 +31,6 @@ var:
 	node node_modules/uglify-js/bin/uglifyjs --verbose build/no-copy.$(REPO).max.js >build/no-copy.$(REPO).js
 	cat template/license.before LICENSE.txt template/license.after build/no-copy.$(REPO).max.js >build/$(REPO).max.js
 	cat template/copyright build/no-copy.$(REPO).js >build/$(REPO).js
-	cp ie8/build/ie8.js build/ie8.js
 	rm build/no-copy.$(REPO).max.js
 	rm build/no-copy.$(REPO).js
 
@@ -75,9 +74,7 @@ web:
 preview:
 	node_modules/markdown/bin/md2html.js README.md >README.md.htm
 	cat template/md.before README.md.htm template/md.after >README.md.html
-	open README.md.html
-	sleep 3
-	rm README.md.htm README.md.html
+	echo 'open README.md.html'
 
 pages:
 	make var
