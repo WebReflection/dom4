@@ -133,6 +133,20 @@
       ElementPrototype[property] = properties[i - 1];
     }
   }
+  // most likely an IE9 only issue
+  // see https://github.com/WebReflection/dom4/issues/6
+  if (!document.createElement('a').matches('a')) {
+    ElementPrototype[property] = function(matches){
+      return function (selector) {
+        return matches.call(
+          this.parentNode ?
+            this :
+            document.createDocumentFragment().appendChild(this),
+          selector
+        );
+      };
+    }(ElementPrototype[property]);
+  }
   // http://www.w3.org/TR/dom/#domtokenlist
   // iOS 5.1 has completely screwed this property
   // classList in ElementPrototype is false
