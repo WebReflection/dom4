@@ -154,6 +154,45 @@ wru.test([
       );
     }
   },{
+    name: 'replaceWith',
+    test: function () {
+      var div = create('div'),
+          first = div.appendChild(create('div')),
+          node = create('div');
+      wru.assert(
+        'If the context object does not have a parent, terminate these steps',
+        !div.replaceWith(node)
+      );
+      first.replaceWith(node);
+      wru.assert(
+        "Replace the context object with node within the context object's parent.",
+        div.firstChild === node &&
+        div.childNodes.length === 1
+      );
+      node.replaceWith(create('one'), 'two');
+      wru.assert(
+        'works with multiple nodes',
+        div.childNodes[0].nodeName.toLowerCase() === 'one' &&
+        div.childNodes[1].nodeType !== 1 &&
+        div.childNodes[1].nodeValue === 'two' &&
+        div.childNodes.length === 2
+      );
+
+      var container = create('div'),
+          a = create('div'),
+          b = create('div'),
+          c = create('div');
+      container.append(a, b, c);
+      b.replaceWith(a, c, b);
+      wru.assert(
+        'works replacing itself',
+        container.childNodes[0] ===  a &&
+        container.childNodes[1] ===  c &&
+        container.childNodes[2] ===  b &&
+        container.childNodes.length === 3
+      );
+    }
+  },{
     name: 'remove',
     test: function () {
       var div = create('div'),
@@ -196,12 +235,12 @@ wru.test([
       // ASHA returns empty string in here o_O
       wru.assert('returns falsy', !classList[0]);
       classList.add('z');
-      wru.assert('returns z', classList.item(0) === 'z');    
+      wru.assert('returns z', classList.item(0) === 'z');
       wru.assert('returns [] z', classList[0] == 'z');
       classList.add('Z');
-      wru.assert('returns Z', classList.item(1) === 'Z');    
+      wru.assert('returns Z', classList.item(1) === 'Z');
       wru.assert('returns [] Z', classList[1] == 'Z');
-      wru.assert('returns still z', classList.item(0) === 'z');    
+      wru.assert('returns still z', classList.item(0) === 'z');
       wru.assert('returns still [] z', classList[0] == 'z');
     }
   },{
@@ -271,7 +310,7 @@ wru.test([
         classList.toggle('z', true) === true && classList.contains('z'));
       wru.assert('If force is omitted same as true',
         classList.toggle('t', true) === true && classList.contains('t'));
-      
+
       wru.assert('If token is NOT in tokens append token to tokens and return true.',
         classList.toggle('not-there') === true && classList.contains('not-there'));
       wru.assert('If token is in tokens and force is either not passed or is false, remove token from tokens and return false',

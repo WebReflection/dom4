@@ -131,6 +131,7 @@ THE SOFTWARE.
           }
         }
       },
+      // WARNING - DEPRECATED - use .replaceWith() instead
       'replace', function replace() {
         var parentNode = this.parentNode;
         if (parentNode) {
@@ -138,6 +139,22 @@ THE SOFTWARE.
             mutationMacro(arguments),
             this
           );
+        }
+      },
+      'replaceWith', function replaceWith() {
+        var parentNode = this.parentNode,
+            comment;
+        if (parentNode) {
+          // if a node is replaced with a list of nodes
+          // that includes the node itself
+          // we need to be able to remove it from its current position
+          // and replace its position with the new list
+          // a comment would play nice here thanks to its ability
+          // to be, CSS and repaint speaking, ignored
+          comment = window.document.createComment('');
+          parentNode.insertBefore(comment, this);
+          parentNode.removeChild(this);
+          parentNode.replaceChild(mutationMacro(arguments), comment);
         }
       },
       'remove', function remove() {

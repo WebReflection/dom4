@@ -1,7 +1,7 @@
 {
     "name": "DOM4",
     "description": "new DOM Level 4 entries",
-    "version": "1.1.1",
+    "version": "1.2.1",
     "main": "build/dom4.js",
     "ignore": [
         "test",
