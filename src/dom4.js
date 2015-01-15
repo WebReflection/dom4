@@ -110,12 +110,16 @@
         }
       },
       'replace', function replace() {
-        var parentNode = this.parentNode;
+        var parentNode = this.parentNode,
+            nextSibling = this.nextSibling,
+            node = mutationMacro(arguments);
         if (parentNode) {
-          parentNode.replaceChild(
-            mutationMacro(arguments),
-            this
-          );
+          parentNode.removeChild(this);
+          if (nextSibling) {
+            parentNode.insertBefore(node, nextSibling);
+          } else {
+            parentNode.appendChild(node);
+          }
         }
       },
       'remove', function remove() {
