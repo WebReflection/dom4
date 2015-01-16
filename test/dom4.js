@@ -129,7 +129,7 @@ wru.test([
       );
     }
   },{
-    name: 'replace',
+    name: 'replaceWith',
     test: function () {
       var div = create('div'),
           first = div.appendChild(create('div')),
@@ -153,7 +153,7 @@ wru.test([
         div.childNodes.length === 2
       );
     }
-  },{
+  }/*,{
     name: 'replaceWith',
     test: function () {
       var div = create('div'),
@@ -192,7 +192,7 @@ wru.test([
         container.childNodes.length === 3
       );
     }
-  },{
+  }*/,{
     name: 'remove',
     test: function () {
       var div = create('div'),
