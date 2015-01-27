@@ -199,7 +199,11 @@
             properties.push.call(this, property);
           }
         }
-        this._.className = '' + this;
+        if (typeof this._.className === "object") {
+          this._.className.baseVal = '' + this;
+        } else {
+          this._.className = '' + this;
+        }
       },
       contains: (function(indexOf){
         return function contains(token) {
