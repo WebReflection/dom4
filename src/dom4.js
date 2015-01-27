@@ -166,7 +166,8 @@
       return token;
     };
     DOMTokenList = function (node) {
-      var className = (typeof node.className === "object"
+      this._svg = typeof node.className === "object";
+      var className = (this._svg
             ? node.className.baseVal
             : node.className).replace(trim, '');
       if (className) {
@@ -186,7 +187,7 @@
             properties.push.call(this, property);
           }
         }
-        if (typeof this._.className === "object") {
+        if (this._svg) {
           this._.className.baseVal = '' + this;
         } else {
           this._.className = '' + this;
@@ -212,7 +213,11 @@
             properties.splice.call(this, i, 1);
           }
         }
-        this._.className = '' + this;
+        if (this._svg) {
+          this._.className.baseVal = '' + this;
+        } else {
+          this._.className = '' + this;
+        }
       },
       toggle: toggle,
       toString: function toString() {
