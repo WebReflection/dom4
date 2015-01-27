@@ -201,8 +201,10 @@ THE SOFTWARE.
       return token;
     };
     DOMTokenList = function (node) {
-      var className = node.className.replace(trim, '');
-      if (className.length) {
+      var className = (typeof node.className === "object"
+            ? node.className.baseVal
+            : node.className).replace(trim, '');
+      if (className) {
         properties.push.apply(
           this,
           className.split(spaces)
