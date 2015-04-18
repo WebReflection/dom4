@@ -1,8 +1,8 @@
 {
     "name": "DOM4",
     "description": "new DOM Level 4 entries",
-    "version": "1.3.1",
-    "main": "build/dom4.js",
+    "version": "1.3.2",
+    "main": "build/dom4.max.js",
     "ignore": [
         "test",
         "ie8",
