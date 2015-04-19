@@ -166,8 +166,11 @@
       return token;
     };
     DOMTokenList = function (node) {
-      var className = node.className.replace(trim, '');
-      if (className.length) {
+      this._svg = typeof node.className === "object";
+      var className = (this._svg
+            ? node.className.baseVal
+            : node.className).replace(trim, '');
+      if (className) {
         properties.push.apply(
           this,
           className.split(spaces)
@@ -184,7 +187,11 @@
             properties.push.call(this, property);
           }
         }
-        this._.className = '' + this;
+        if (this._svg) {
+          this._.className.baseVal = '' + this;
+        } else {
+          this._.className = '' + this;
+        }
       },
       contains: (function(indexOf){
         return function contains(token) {
@@ -206,7 +213,11 @@
             properties.splice.call(this, i, 1);
           }
         }
-        this._.className = '' + this;
+        if (this._svg) {
+          this._.className.baseVal = '' + this;
+        } else {
+          this._.className = '' + this;
+        }
       },
       toggle: toggle,
       toString: function toString() {
