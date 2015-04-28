@@ -188,11 +188,15 @@ THE SOFTWARE.
       return token;
     };
     DOMTokenList = function (node) {
-      var className = node.className.replace(trim, '');
-      if (className.length) {
+      var
+        className = node.className,
+        value = (typeof className === 'object' ?
+          className.baseVal : className).replace(trim, '')
+      ;
+      if (value.length) {
         properties.push.apply(
           this,
-          className.split(spaces)
+          value.split(spaces)
         );
       }
       this._ = node;

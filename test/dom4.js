@@ -417,5 +417,19 @@ wru.test([
       wru.assert('exclusive', document.body.closest('html') === document.documentElement);
       wru.assert('nullable', document.body.closest('.null') === null);
     }
+  }, {
+    name: 'DOMTokenList in SVG',
+    test: function () {
+      var shape = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      wru.assert('it has className as object', typeof shape.className === 'object');
+      shape.classList.add('a', 'b', 'c');
+      wru.assert('classList works as expected', shape.classList.contains('b'));
+      shape.classList.remove('a', 'b');
+      wru.assert('classList removes values too',
+        !shape.classList.contains('a') &&
+        !shape.classList.contains('b') &&
+        shape.classList.contains('c')
+      );
+    }
   }
 ]);
