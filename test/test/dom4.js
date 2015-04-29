@@ -51,7 +51,7 @@ wru.test([
         div.childNodes[4] === first
       );
     }
-  },{
+  }, {
     name: 'append',
     test: function () {
       var div = create('div'),
@@ -78,7 +78,7 @@ wru.test([
         div.childNodes[4].nodeName.toLowerCase() === 'three'
       );
     }
-  },{
+  }, {
     name: 'before',
     test: function () {
       var div = create('div'),
@@ -103,7 +103,7 @@ wru.test([
         div.childNodes[3] === first
       );
     }
-  },{
+  }, {
     name: 'after',
     test: function () {
       var div = create('div'),
@@ -128,8 +128,8 @@ wru.test([
         div.childNodes[3] === node
       );
     }
-  },{
-    name: 'replace',
+  }, {
+    name: 'replaceWith',
     test: function () {
       var div = create('div'),
           first = div.appendChild(create('div')),
@@ -153,7 +153,7 @@ wru.test([
         div.childNodes.length === 2
       );
     }
-  },{
+  }, {
     name: 'remove',
     test: function () {
       var div = create('div'),
@@ -168,12 +168,12 @@ wru.test([
         div.childNodes.length === 0
       );
     }
-  },{
+  }, {
     name: 'DOMTokenList',
     test: function () {
       wru.assert('it exists', create('div').classList);
     }
-  },{
+  }, {
     name: 'DOMTokenList#length',
     test: function () {
       var div = create('div'),
@@ -187,7 +187,7 @@ wru.test([
       classList.remove('c');
       wru.assert('no tokens', classList.length === 0);
     }
-  },{
+  }, {
     name: 'DOMTokenList#item(i)',
     test: function () {
       var div = create('div'),
@@ -196,15 +196,15 @@ wru.test([
       // ASHA returns empty string in here o_O
       wru.assert('returns falsy', !classList[0]);
       classList.add('z');
-      wru.assert('returns z', classList.item(0) === 'z');    
+      wru.assert('returns z', classList.item(0) === 'z');
       wru.assert('returns [] z', classList[0] == 'z');
       classList.add('Z');
-      wru.assert('returns Z', classList.item(1) === 'Z');    
+      wru.assert('returns Z', classList.item(1) === 'Z');
       wru.assert('returns [] Z', classList[1] == 'Z');
-      wru.assert('returns still z', classList.item(0) === 'z');    
+      wru.assert('returns still z', classList.item(0) === 'z');
       wru.assert('returns still [] z', classList[0] == 'z');
     }
-  },{
+  }, {
     name: 'DOMTokenList#contains(token)',
     test: function () {
       var div = create('div'),
@@ -240,7 +240,7 @@ wru.test([
       classList.add('b');
       wru.assert('did not add b again', div.className === 'a\x20b\x20c\x20z');
     }
-  },{
+  }, {
     name: 'DOMTokenList#remove(tokens...)',
     test: function () {
       var div = create('div'),
@@ -271,7 +271,7 @@ wru.test([
         classList.toggle('z', true) === true && classList.contains('z'));
       wru.assert('If force is omitted same as true',
         classList.toggle('t', true) === true && classList.contains('t'));
-      
+
       wru.assert('If token is NOT in tokens append token to tokens and return true.',
         classList.toggle('not-there') === true && classList.contains('not-there'));
       wru.assert('If token is in tokens and force is either not passed or is false, remove token from tokens and return false',
@@ -335,14 +335,14 @@ wru.test([
       }));
       document.dispatchEvent(new CustomEvent('what:ever', {detail: detail}));
     }
-  },{
+  }, {
     name: 'adding twice same class does NOT results in duplicated',
     test: function () {
       var div = create('div');
       div.classList.add('a', 'a');
       wru.assert('no duplicated args', div.className === 'a');
     }
-  },{
+  }, {
     name: 'Element#matches',
     test: function () {
       var
@@ -370,6 +370,51 @@ wru.test([
       ));
       // WARNING, this is not normalized at all across browsers even if native
       // wru.assert('works with non in DOM nodes', document.createElement('div').matches('div'));
+    }
+  }, {
+    name: 'closest',
+    test: function () {
+      wru.assert('inclusive', document.body.closest('body') === document.body);
+      wru.assert('exclusive', document.body.closest('html') === document.documentElement);
+      wru.assert('nullable', document.body.closest('.null') === null);
+    }
+  }, {
+    name: 'DOMTokenList in SVG',
+    test: function () {
+      var shape = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      // actually not clear why some browser exposes the className as object
+      // check only this case
+      if (typeof shape.className !== 'string') {
+        wru.assert('it has className as object', typeof shape.className === 'object');
+        shape.classList.add('a', 'b', 'c');
+        wru.assert('classList works as expected', shape.classList.contains('b'));
+        shape.classList.remove('a', 'b');
+        wru.assert('classList removes values too',
+          !shape.classList.contains('a') &&
+          !shape.classList.contains('b') &&
+          shape.classList.contains('c')
+        );
+      }
+    }
+  }, {
+    name: 'query',
+    test: function () {
+      var div = document.createElement('div');
+      div.innerHTML = '<ul><li></li><li></li></ul>';
+      wru.assert('find just one node', div.query('li') === div.querySelector('li'));
+    }
+  }, {
+    name: 'queryAll',
+    test: function () {
+      var div = document.createElement('div');
+      div.innerHTML = '<ul><li></li><li></li></ul>';
+      var li = div.queryAll('li');
+      var oldWay = div.querySelectorAll('li');
+      wru.assert('find all of them',
+        li[0] === oldWay[0] &&
+        li[1] === oldWay[1]
+      );
+      wru.assert('is an instanceof Array', li instanceof Array);
     }
   }
 ]);
