@@ -1,70 +1,91 @@
-<!doctype html>
-<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
-<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on http://github.com/jonrohan -->
+<!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen">
-  <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-  <script type="text/javascript" src="javascripts/script.js"></script>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Dom4 : a fully tested and covered polyfill for new DOM Level 4 entries">
 
-  <title>Dom4</title>
-  <meta name="description" content="a fully tested and covered polyfill for new DOM Level 4 entries">
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Dom4</title>
+  </head>
 
-</head>
+  <body>
 
-<body>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/WebReflection/dom4">View on GitHub</a>
 
-  <div class="wrapper">
-    <header>
-      <h1 class="title">Dom4</h1>
-    </header>
-    <div id="container">
-      <p class="tagline">a fully tested and covered polyfill for new DOM Level 4 entries</p>
-      <div id="main" role="main">
-        <div class="download-bar">
-        <div class="inner">
-          <a href="https://github.com/WebReflection/dom4/tarball/master" class="download-button tar"><span>Download</span></a>
-          <a href="https://github.com/WebReflection/dom4/zipball/master" class="download-button zip"><span>Download</span></a>
-          <a href="https://github.com/WebReflection/dom4" class="code">View Dom4 on GitHub</a>
-        </div>
-        <span class="blc"></span><span class="trc"></span>
-        </div>
-        <article class="markdown-body">
-          <h1>
-<a name="dom4" class="anchor" href="#dom4"><span class="octicon octicon-link"></span></a>DOM4</h1>
+          <h1 id="project_title">Dom4</h1>
+          <h2 id="project_tagline">a fully tested and covered polyfill for new DOM Level 4 entries</h2>
 
-<p>This is a <a href="http://webreflection.github.io/dom4/test/">fully tested</a> and covered polyfill for <a href="https://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#interface-element">new DOM Level 4 entries</a></p>
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/WebReflection/dom4/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/WebReflection/dom4/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="dom4" class="anchor" href="#dom4" aria-hidden="true"><span class="octicon octicon-link"></span></a>DOM4</h1>
+
+<h4>
+<a id="now-in-cdnjs" class="anchor" href="#now-in-cdnjs" aria-hidden="true"><span class="octicon octicon-link"></span></a>Now in cdnJS</h4>
+
+<p>Many thanks to <a href="http://www.cdnjs.com">cdnjs</a> for hosting this script. Following an example on how to include it.</p>
+
+<div class="highlight highlight-html"><pre><span class="pl-s1">&lt;<span class="pl-ent">script</span></span>
+<span class="pl-s1">  <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>//cdnjs.cloudflare.com/ajax/libs/dom4/1.4.0/dom4.js<span class="pl-pds">"</span></span></span>
+<span class="pl-s1">&gt;<span class="pl-c">/* DOM4 */</span>&lt;/<span class="pl-ent">script</span>&gt;</span></pre></div>
+
+<h4>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h4>
+
+<p>This is a <a href="http://webreflection.github.io/dom4/test/">fully tested</a> and covered polyfill for both <a href="https://dom.spec.whatwg.org/#parentnode">new DOM Level 4 parentNode entries</a>:</p>
 
 <ul>
 <li>Element#prepend()</li>
 <li>Element#append()</li>
+</ul>
+
+<p>And for <a href="https://dom.spec.whatwg.org/#childnode">new DOM Level 4 childNode entries</a>:</p>
+
+<ul>
 <li>Element#before()</li>
 <li>Element#after()</li>
-<li>Element#replace()</li>
+<li>Element#replaceWith() ( <strong>warning</strong> Element#replace() has been recently deprecated )</li>
 <li>Element#remove()</li>
-</ul><p>The <a href="test/dom4.js">implemented test</a> is conform to <a href="https://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#dom-rootnode-prepend">current specifications</a>.</p>
+</ul>
+
+<p>The <a href="test/dom4.js">implemented test</a> is conform to current specifications.</p>
 
 <p>Other fixes/standardized behaviors include:</p>
 
 <ul>
+<li>
+<strong>new</strong> <a href="http://www.w3.org/TR/2015/WD-dom-20150428/#elements">Elements as Array subclass</a>, so that <code>el.query</code> is same as <code>el.querySelector</code> but <code>el.queryAll</code> replaces <code>Array.prototype.slice.call(el.querySelectorAll(css))</code>
+</li>
 <li>
 <a href="http://www.w3.org/TR/dom/#domtokenlist">classList</a>, with forced fixes for iOS 5.1 and Nokia ASHA Xpress Browser and early implementations</li>
 <li>
 <a href="http://www.w3.org/TR/dom/#customevent">CustomEvent</a> constructor for all browsers down to IE8</li>
 <li>
 <a href="http://www.w3.org/TR/dom/#dom-element-matches">Element#matches</a> utility to test elements against CSS selectors</li>
-</ul><p>The <strong>DOM4</strong> license is Mit Style.</p>
+<li>
+<a href="https://dom.spec.whatwg.org/#dom-element-closest">Element#closest</a> utility to find element inclusive ancestor via CSS selectors</li>
+</ul>
+
+<p>The <strong>DOM4</strong> license is Mit Style.</p>
 
 <p>If you need other polyfills too <a href="https://github.com/Raynos/DOM-shim">have a look at another DOM-shim repo</a>.</p>
 
 <h3>
-<a name="compatibility" class="anchor" href="#compatibility"><span class="octicon octicon-link"></span></a>Compatibility</h3>
+<a id="compatibility" class="anchor" href="#compatibility" aria-hidden="true"><span class="octicon octicon-link"></span></a>Compatibility</h3>
 
 <p>Theoretically compatible with all browsers you know that are truly used these days, here a list:</p>
 
@@ -81,34 +102,28 @@
 <li>Nokia Xpress Browser for ASHA Platform</li>
 <li>Silk Browser - Fire OS 3.0</li>
 <li>PhantomJS can benefit from DOM4 too</li>
-</ul><p>It's way easier if you tell me which browser in a current relevant market share is not supported :-)</p>
+</ul>
+
+<p>It's way easier if you tell me which browser in a current relevant market share is not supported :-)</p>
 
 <p>For <strong>IE8</strong> only it's recommended to include <a href="https://github.com/WebReflection/ie8#ie8">ie8</a> script before <code>dom4</code> or <code>CustomEvent</code>, <code>addEventListener</code>, and <code>dispatchEvent</code> won't work as expected.</p>
 
 <h3>
-<a name="which-file" class="anchor" href="#which-file"><span class="octicon octicon-link"></span></a>Which File</h3>
+<a id="which-file" class="anchor" href="#which-file" aria-hidden="true"><span class="octicon octicon-link"></span></a>Which File</h3>
 
 <p>The <a href="build/dom4.js">minified version is here</a>, while the <a href="build/dom4.max.js">max one here</a>. If you want to test directly <a href="http://webreflection.github.com/dom4/test/">try this page</a>, it should be green.</p>
-        </article>
-      </div>
+      </section>
     </div>
-    <footer>
-      <div class="owner">
-      <p><a href="https://github.com/WebReflection" class="avatar"><img src="https://avatars3.githubusercontent.com/u/85749?v=2&amp;s=60" width="48" height="48"></a> <a href="https://github.com/WebReflection">WebReflection</a> maintains <a href="https://github.com/WebReflection/dom4">Dom4</a></p>
 
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Dom4 maintained by <a href="https://github.com/WebReflection">WebReflection</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
 
-      </div>
-      <div class="creds">
-        <small>This page generated using <a href="http://pages.github.com/">GitHub Pages</a><br>theme by <a href="https://twitter.com/jonrohan/">Jon Rohan</a></small>
-      </div>
-    </footer>
-  </div>
-  <div class="current-section">
-    <a href="#top">Scroll to top</a>
-    <a href="https://github.com/WebReflection/dom4/tarball/master" class="tar">tar</a><a href="https://github.com/WebReflection/dom4/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
-    <p class="name"></p>
-  </div>
+    
 
-  
-</body>
+  </body>
 </html>
