@@ -88,8 +88,6 @@ pages:
 	mkdir -p test
 	rm -rf test
 	cp -rf ~/tmp/$(REPO) test
-	git submodule init
-	git submodule update
 	git add .
 	git commit -m 'automatic test generator'
 	git push
