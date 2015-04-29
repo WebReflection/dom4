@@ -1,11 +1,13 @@
 DOM4
 ====
 
-#### Now in cdnJS
+[![build status](https://travis-ci.org/WebReflection/dom4.svg)](https://travis-ci.org/WebReflection/dom4)
+
+#### Via cdnJS
 Many thanks to [cdnjs](http://www.cdnjs.com) for hosting this script. Following an example on how to include it.
 ```html
 <script
-  src="//cdnjs.cloudflare.com/ajax/libs/dom4/1.4.0/dom4.js"
+  src="//cdnjs.cloudflare.com/ajax/libs/dom4/1.4.1/dom4.js"
 >/* DOM4 */</script>
 ```
 
@@ -57,4 +59,4 @@ It's way easier if you tell me which browser in a current relevant market share 
 For **IE8** only it's recommended to include [ie8](https://github.com/WebReflection/ie8#ie8) script before `dom4` or `CustomEvent`, `addEventListener`, and `dispatchEvent` won't work as expected.
 
 ### Which File
-The [minified version is here](build/dom4.js), while the [max one here](build/dom4.max.js). If you want to test directly [try this page](http://webreflection.github.com/dom4/test/), it should be green.
+The [minified version is here](https://github.com/WebReflection/dom4/blob/master/build/dom4.js), while the [max one here](https://github.com/WebReflection/dom4/blob/master/build/dom4.max.js). If you want to test directly [try this page](http://webreflection.github.com/dom4/test/), it should be green.
