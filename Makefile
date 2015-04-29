@@ -80,7 +80,6 @@ pages:
 	make var
 	mkdir -p ~/tmp
 	mkdir -p ~/tmp/$(REPO)
-	cp .gitmodules ~/tmp/$(REPO)
 	cp -rf src ~/tmp/$(REPO)
 	cp -rf build/* ~/tmp/$(REPO)/src/
 	cp -rf test ~/tmp/$(REPO)
