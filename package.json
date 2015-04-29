@@ -2,7 +2,7 @@
   "name": "dom4",
   "title": "DOM4",
   "description": "a fully tested and covered polyfill for new DOM Level 4 entries",
-  "version": "1.3.3",
+  "version": "1.4.0",
   "main": "build/dom4.js",
   "homepage": "https://github.com/WebReflection/dom4",
   "author": {
@@ -26,8 +26,16 @@
       "url": "https://github.com/jquery/jquery/blob/master/MIT-LICENSE.txt"
     }
   ],
+  "scripts": {
+    "test": "phantomjs testrunner.js",
+    "web": "IP=0.0.0.0 node node_modules/polpetta"
+  },
   "dependencies": {},
   "devDependencies": {
-    "wru": ">= 0.0.0"
+    "wru": "~0.2.x",
+    "uglify-js": "1.x",
+    "jshint": "~2.x",
+    "polpetta": "~0.3.x",
+    "phantomjs": "~1.x"
   }
 }

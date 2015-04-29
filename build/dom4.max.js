@@ -24,14 +24,14 @@ THE SOFTWARE.
   /* jshint loopfunc: true, noempty: false*/
   // http://www.w3.org/TR/dom/#element
   function textNodeIfString(node) {
-    return typeof node === 'string' ? window.document.createTextNode(node) : node;
+    return typeof node === 'string' ? document.createTextNode(node) : node;
   }
   function mutationMacro(nodes) {
     if (nodes.length === 1) {
       return textNodeIfString(nodes[0]);
     }
     for (var
-      fragment = window.document.createDocumentFragment(),
+      fragment = document.createDocumentFragment(),
       list = slice.call(nodes),
       i = 0; i < nodes.length; i++
     ) {
@@ -40,6 +40,12 @@ THE SOFTWARE.
     return fragment;
   }
   for(var
+    head,
+    property,
+    TemporaryPrototype,
+    TemporaryTokenList,
+    wrapVerifyToken,
+    document = window.document,
     defineProperty = Object.defineProperty || function (object, property, descriptor) {
       object.__defineGetter__(property, descriptor.get);
     },
@@ -52,13 +58,40 @@ THE SOFTWARE.
       }
       return length;
     },
-    head,
-    property,
-    verifyToken,
-    DOMTokenList,
+    // http://www.w3.org/TR/domcore/#domtokenlist
+    verifyToken = function (token) {
+      if (!token) {
+        throw 'SyntaxError';
+      } else if (spaces.test(token)) {
+        throw 'InvalidCharacterError';
+      }
+      return token;
+    },
+    DOMTokenList = function (node) {
+      var
+        className = node.className,
+        isSVG = typeof className === 'object',
+        value = (isSVG ? className.baseVal : className).replace(trim, '')
+      ;
+      if (value.length) {
+        properties.push.apply(
+          this,
+          value.split(spaces)
+        );
+      }
+      this._isSVG = isSVG;
+      this._ = node;
+    },
+    classListDescriptor = {
+      get: function get() {
+        return new DOMTokenList(this);
+      },
+      set: function(){}
+    },
     trim = /^\s+|\s+$/g,
     spaces = /\s+/,
     SPACE = '\x20',
+    CLASS_LIST = 'classList',
     toggle = function toggle(token, force) {
       if (this.contains(token)) {
         if (!force) {
@@ -72,6 +105,7 @@ THE SOFTWARE.
       return !!force;
     },
     ElementPrototype = (window.Element || window.Node || window.HTMLElement).prototype,
+    SVGElement = window.SVGElement,
     properties = [
       'matches', (
         ElementPrototype.matchesSelector ||
@@ -149,6 +183,18 @@ THE SOFTWARE.
         if (parentNode) {
           parentNode.removeChild(this);
         }
+      },
+      'query', function query(css) {
+        return this.querySelector(css);
+      },
+      'queryAll', function queryAll(css) {
+        var
+          nl = this.querySelectorAll(css),
+          i = nl.length,
+          a = new Array(i)
+        ;
+        while (i--) a[i] = nl[i];
+        return a;
       }
     ],
     slice = properties.slice,
@@ -173,91 +219,78 @@ THE SOFTWARE.
       };
     }(ElementPrototype[property]);
   }
+
+  // used to fix both old webkit and SVG
+  DOMTokenList.prototype = {
+    length: 0,
+    add: function add() {
+      for(var j = 0, token; j < arguments.length; j++) {
+        token = arguments[j];
+        if(!this.contains(token)) {
+          properties.push.call(this, property);
+        }
+      }
+      if (this._isSVG) {
+        this._.setAttribute('class', '' + this);
+      } else {
+        this._.className = '' + this;
+      }
+    },
+    contains: (function(indexOf){
+      return function contains(token) {
+        i = indexOf.call(this, property = verifyToken(token));
+        return -1 < i;
+      };
+    }([].indexOf || function (token) {
+      i = this.length;
+      while(i-- && this[i] !== token){}
+      return i;
+    })),
+    item: function item(i) {
+      return this[i] || null;
+    },
+    remove: function remove() {
+      for(var j = 0, token; j < arguments.length; j++) {
+        token = arguments[j];
+        if(this.contains(token)) {
+          properties.splice.call(this, i, 1);
+        }
+      }
+      if (this._isSVG) {
+        this._.setAttribute('class', '' + this);
+      } else {
+        this._.className = '' + this;
+      }
+    },
+    toggle: toggle,
+    toString: function toString() {
+      return properties.join.call(this, SPACE);
+    }
+  };
+
+  if (SVGElement && !(CLASS_LIST in SVGElement.prototype)) {
+    defineProperty(SVGElement.prototype, CLASS_LIST, classListDescriptor);
+  }
+
   // http://www.w3.org/TR/dom/#domtokenlist
   // iOS 5.1 has completely screwed this property
   // classList in ElementPrototype is false
   // but it's actually there as getter
-  if (!('classList' in document.documentElement)) {
-    // http://www.w3.org/TR/domcore/#domtokenlist
-    verifyToken = function (token) {
-      if (!token) {
-        throw 'SyntaxError';
-      } else if (spaces.test(token)) {
-        throw 'InvalidCharacterError';
-      }
-      return token;
-    };
-    DOMTokenList = function (node) {
-      var
-        className = node.className,
-        value = (typeof className === 'object' ?
-          className.baseVal : className).replace(trim, '')
-      ;
-      if (value.length) {
-        properties.push.apply(
-          this,
-          value.split(spaces)
-        );
-      }
-      this._ = node;
-    };
-    DOMTokenList.prototype = {
-      length: 0,
-      add: function add() {
-        for(var j = 0, token; j < arguments.length; j++) {
-          token = arguments[j];
-          if(!this.contains(token)) {
-            properties.push.call(this, property);
-          }
-        }
-        this._.className = '' + this;
-      },
-      contains: (function(indexOf){
-        return function contains(token) {
-          i = indexOf.call(this, property = verifyToken(token));
-          return -1 < i;
-        };
-      }([].indexOf || function (token) {
-        i = this.length;
-        while(i-- && this[i] !== token){}
-        return i;
-      })),
-      item: function item(i) {
-        return this[i] || null;
-      },
-      remove: function remove() {
-        for(var j = 0, token; j < arguments.length; j++) {
-          token = arguments[j];
-          if(this.contains(token)) {
-            properties.splice.call(this, i, 1);
-          }
-        }
-        this._.className = '' + this;
-      },
-      toggle: toggle,
-      toString: function toString() {
-        return properties.join.call(this, SPACE);
-      }
-    };
-    defineProperty(ElementPrototype, 'classList', {
-      get: function get() {
-        return new DOMTokenList(this);
-      },
-      set: function(){}
-    });
+  if (!(CLASS_LIST in document.documentElement)) {
+    defineProperty(ElementPrototype, CLASS_LIST, classListDescriptor);
   } else {
     // iOS 5.1 and Nokia ASHA do not support multiple add or remove
     // trying to detect and fix that in here
-    DOMTokenList = document.createElement('div').classList;
-    DOMTokenList.add('a', 'b', 'a');
-    if ('a\x20b' != DOMTokenList) {
+    TemporaryTokenList = document.createElement('div')[CLASS_LIST];
+    TemporaryTokenList.add('a', 'b', 'a');
+    if ('a\x20b' != TemporaryTokenList) {
       // no other way to reach original methods in iOS 5.1
-      ElementPrototype = DOMTokenList.constructor.prototype;
-      if (!('add' in ElementPrototype)) {
+      TemporaryPrototype = TemporaryTokenList.constructor.prototype;
+      if (!('add' in TemporaryPrototype)) {
         // ASHA double fails in here
-        ElementPrototype = window.DOMTokenList.prototype;
+        TemporaryPrototype = window.TemporaryTokenList.prototype;
       }
-      verifyToken = function (original) {
+      wrapVerifyToken = function (original) {
         return function () {
           var i = 0;
           while (i < arguments.length) {
@@ -265,10 +298,10 @@ THE SOFTWARE.
           }
         };
       };
-      ElementPrototype.add = verifyToken(ElementPrototype.add);
-      ElementPrototype.remove = verifyToken(ElementPrototype.remove);
+      TemporaryPrototype.add = wrapVerifyToken(TemporaryPrototype.add);
+      TemporaryPrototype.remove = wrapVerifyToken(TemporaryPrototype.remove);
       // toggle is broken too ^_^ ... let's fix it
-      ElementPrototype.toggle = toggle;
+      TemporaryPrototype.toggle = toggle;
     }
   }
 
