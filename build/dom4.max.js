@@ -205,6 +205,15 @@ THE SOFTWARE.
       ElementPrototype[property] = properties[i - 1];
     }
   }
+
+  // bring query and queryAll to the document too
+  if (!('query' in document)) {
+    document.query = ElementPrototype.query;
+  }
+  if (!('queryAll' in document)) {
+    document.queryAll = ElementPrototype.queryAll;
+  }
+
   // most likely an IE9 only issue
   // see https://github.com/WebReflection/dom4/issues/6
   if (!document.createElement('a').matches('a')) {

@@ -402,6 +402,7 @@ wru.test([
       var div = document.createElement('div');
       div.innerHTML = '<ul><li></li><li></li></ul>';
       wru.assert('find just one node', div.query('li') === div.querySelector('li'));
+      wru.assert('on document too', document.query('body') === document.body);
     }
   }, {
     name: 'queryAll',
@@ -415,6 +416,9 @@ wru.test([
         li[1] === oldWay[1]
       );
       wru.assert('is an instanceof Array', li instanceof Array);
+      wru.assert('on document too', document.queryAll('body') instanceof Array);
+      wru.assert('and it has the right length', document.queryAll('body').length === 1);
+      wru.assert('and contains the right element', document.queryAll('body')[0] === document.body);
     }
   }
 ]);
