@@ -399,10 +399,13 @@ wru.test([
   }, {
     name: 'query',
     test: function () {
-      var div = document.createElement('div');
+      var div = document.body.appendChild(document.createElement('div'));
       div.innerHTML = '<ul><li></li><li></li></ul>';
       wru.assert('find just one node', div.query('li') === div.querySelector('li'));
       wru.assert('on document too', document.query('body') === document.body);
+      wru.assert('while querySelector returns absolute nodes', div.querySelector('body ul') === div.firstChild);
+      wru.assert('query returns only relative', div.query('body ul') === null);
+      div.remove();
     }
   }, {
     name: 'queryAll',
@@ -419,6 +422,10 @@ wru.test([
       wru.assert('on document too', document.queryAll('body') instanceof Array);
       wru.assert('and it has the right length', document.queryAll('body').length === 1);
       wru.assert('and contains the right element', document.queryAll('body')[0] === document.body);
+      document.body.appendChild(div);
+      wru.assert('while querySelectorAll returns absolute nodes', div.querySelectorAll('body ul')[0] === div.firstChild);
+      wru.assert('queryAll returns only relative', div.queryAll('body ul').length === 0);
+      div.remove();
     }
   }
 ]);

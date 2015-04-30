@@ -66,6 +66,7 @@
       },
       set: function(){}
     },
+    uid = 'dom4-tmp-'.concat(Math.random() * +new Date()).replace('.','-'),
     trim = /^\s+|\s+$/g,
     spaces = /\s+/,
     SPACE = '\x20',
@@ -163,14 +164,25 @@
         }
       },
       'query', function query(css) {
-        return this.querySelector(css);
+        return this.queryAll(css)[0] || null;
       },
       'queryAll', function queryAll(css) {
-        var
-          nl = this.querySelectorAll(css),
-          i = nl.length,
-          a = new Array(i)
-        ;
+        var a, i, id, nl, selectors, node = this.parentNode;
+        if (node) {
+          for (
+            id = this.getAttribute('id') || uid,
+            selectors = css.split(','),
+            i = 0; i < selectors.length; i++
+          ) {
+            selectors[i] = '#' + id + ' ' + selectors[i];
+          }
+          css = selectors.join(',');
+        }
+        if (id === uid) this.setAttribute('id', id);
+        nl = (node || this).querySelectorAll(css);
+        if (id === uid) this.removeAttribute('id');
+        i = nl.length;
+        a = new Array(i);
         while (i--) a[i] = nl[i];
         return a;
       }
