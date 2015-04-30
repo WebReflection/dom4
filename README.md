@@ -28,7 +28,7 @@ The [implemented test](test/dom4.js) is conform to current specifications.
 
 Other fixes/standardized behaviors include:
 
-  * **new** [Elements as Array subclass](http://www.w3.org/TR/2015/WD-dom-20150428/#elements), so that `el.query` is same as `el.querySelector` but `el.queryAll` replaces `Array.prototype.slice.call(el.querySelectorAll(css))`
+  * **new** [Elements as Array subclass](http://www.w3.org/TR/2015/WD-dom-20150428/#elements), so that `el.query` is the relative equivalent of `el.querySelector` and `el.queryAll` is the relative equivalent of `Array.prototype.slice.call(el.querySelectorAll(css))`. Relative means `node.query('body p')` won't return any `p` element contained in `node`, while old `querySelector` would.
   * [classList](http://www.w3.org/TR/dom/#domtokenlist), with forced fixes for iOS 5.1 and Nokia ASHA Xpress Browser and early implementations
   * [CustomEvent](http://www.w3.org/TR/dom/#customevent) constructor for all browsers down to IE8
   * [Element#matches](http://www.w3.org/TR/dom/#dom-element-matches) utility to test elements against CSS selectors
