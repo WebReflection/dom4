@@ -428,4 +428,14 @@ wru.test([
       div.remove();
     }
   }
-]);
+].concat(
+  typeof ShadowRoot === 'function' ?
+  [{
+    name: 'ShadowRoot query/queryAll',
+    test: function () {
+      wru.assert('ShadowRoot#query', ShadowRoot.prototype.query);
+      wru.assert('ShadowRoot#queryAll', ShadowRoot.prototype.queryAll);
+    }
+  }] :
+  []
+));

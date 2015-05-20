@@ -107,6 +107,48 @@ THE SOFTWARE.
     },
     ElementPrototype = (window.Element || window.Node || window.HTMLElement).prototype,
     SVGElement = window.SVGElement,
+    // normalizes multiple ids as CSS query
+    idSpaceFinder = / /g,
+    idSpaceReplacer = '\\ ',
+    createQueryMethod = function (methodName) {
+      var createArray = methodName === 'querySelectorAll';
+      return function (css) {
+        var a, i, id, query, nl, selectors, node = this.parentNode;
+        if (node) {
+          for (
+            id = this.getAttribute('id') || uid,
+            query = id === uid ? id : id.replace(idSpaceFinder, idSpaceReplacer),
+            selectors = css.split(','),
+            i = 0; i < selectors.length; i++
+          ) {
+            selectors[i] = '#' + query + ' ' + selectors[i];
+          }
+          css = selectors.join(',');
+        }
+        if (id === uid) this.setAttribute('id', id);
+        nl = (node || this)[methodName](css);
+        if (id === uid) this.removeAttribute('id');
+        // return a list
+        if (createArray) {
+          i = nl.length;
+          a = new Array(i);
+          while (i--) a[i] = nl[i];
+        }
+        // return node or null
+        else {
+          a = nl;
+        }
+        return a;
+      };
+    },
+    addQueryAndAll = function (where) {
+      if (!('query' in where)) {
+        where.query = ElementPrototype.query;
+      }
+      if (!('queryAll' in where)) {
+        where.queryAll = ElementPrototype.queryAll;
+      }
+    },
     properties = [
       'matches', (
         ElementPrototype.matchesSelector ||
@@ -185,29 +227,8 @@ THE SOFTWARE.
           parentNode.removeChild(this);
         }
       },
-      'query', function query(css) {
-        return this.queryAll(css)[0] || null;
-      },
-      'queryAll', function queryAll(css) {
-        var a, i, id, nl, selectors, node = this.parentNode;
-        if (node) {
-          for (
-            id = this.getAttribute('id') || uid,
-            selectors = css.split(','),
-            i = 0; i < selectors.length; i++
-          ) {
-            selectors[i] = '#' + id + ' ' + selectors[i];
-          }
-          css = selectors.join(',');
-        }
-        if (id === uid) this.setAttribute('id', id);
-        nl = (node || this).querySelectorAll(css);
-        if (id === uid) this.removeAttribute('id');
-        i = nl.length;
-        a = new Array(i);
-        while (i--) a[i] = nl[i];
-        return a;
-      }
+      'query', createQueryMethod('querySelector'),
+      'queryAll', createQueryMethod('querySelectorAll')
     ],
     slice = properties.slice,
     i = properties.length; i; i -= 2
@@ -219,11 +240,11 @@ THE SOFTWARE.
   }
 
   // bring query and queryAll to the document too
-  if (!('query' in document)) {
-    document.query = ElementPrototype.query;
-  }
-  if (!('queryAll' in document)) {
-    document.queryAll = ElementPrototype.queryAll;
+  addQueryAndAll(document);
+
+  // bring query and queryAll to the ShadowRoot too
+  if (typeof ShadowRoot === 'function') {
+    addQueryAndAll(ShadowRoot.prototype);
   }
 
   // most likely an IE9 only issue
