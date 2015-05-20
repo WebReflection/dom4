@@ -23,15 +23,17 @@ THE SOFTWARE.
 (function(window){'use strict';
   /* jshint loopfunc: true, noempty: false*/
   // http://www.w3.org/TR/dom/#element
-  function textNodeIfString(node) {
-    return typeof node === 'string' ? document.createTextNode(node) : node;
+
+  function createDocumentFragment() {
+    return document.createDocumentFragment();
   }
+
   function mutationMacro(nodes) {
     if (nodes.length === 1) {
       return textNodeIfString(nodes[0]);
     }
     for (var
-      fragment = document.createDocumentFragment(),
+      fragment = createDocumentFragment(),
       list = slice.call(nodes),
       i = 0; i < nodes.length; i++
     ) {
@@ -39,6 +41,11 @@ THE SOFTWARE.
     }
     return fragment;
   }
+
+  function textNodeIfString(node) {
+    return typeof node === 'string' ? document.createTextNode(node) : node;
+  }
+
   for(var
     head,
     property,
@@ -105,7 +112,9 @@ THE SOFTWARE.
       }
       return !!force;
     },
+    DocumentFragment = window.DocumentFragment,
     ElementPrototype = (window.Element || window.Node || window.HTMLElement).prototype,
+    ShadowRoot = window.ShadowRoot,
     SVGElement = window.SVGElement,
     // normalizes multiple ids as CSS query
     idSpaceFinder = / /g,
@@ -242,8 +251,17 @@ THE SOFTWARE.
   // bring query and queryAll to the document too
   addQueryAndAll(document);
 
+  // brings query and queryAll to fragments as well
+  if (DocumentFragment) {
+    addQueryAndAll(DocumentFragment.prototype);
+  } else {
+    try {
+      addQueryAndAll(createDocumentFragment().constructor.prototype);
+    } catch(o_O) {}
+  }
+
   // bring query and queryAll to the ShadowRoot too
-  if (typeof ShadowRoot === 'function') {
+  if (ShadowRoot) {
     addQueryAndAll(ShadowRoot.prototype);
   }
 
@@ -255,7 +273,7 @@ THE SOFTWARE.
         return matches.call(
           this.parentNode ?
             this :
-            document.createDocumentFragment().appendChild(this),
+            createDocumentFragment().appendChild(this),
           selector
         );
       };

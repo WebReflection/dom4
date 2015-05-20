@@ -427,6 +427,13 @@ wru.test([
       wru.assert('queryAll returns only relative', div.queryAll('body ul').length === 0);
       div.remove();
     }
+  }, {
+    name: 'DocumentFragment query/queryAll',
+    test: function () {
+      var df = document.createDocumentFragment();
+      wru.assert('DocumentFragment#query', df.query);
+      wru.assert('DocumentFragment#queryAll', df.queryAll);
+    }
   }
 ].concat(
   typeof ShadowRoot === 'function' ?

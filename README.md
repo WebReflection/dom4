@@ -7,7 +7,7 @@ DOM4
 Many thanks to [cdnjs](http://www.cdnjs.com) for hosting this script. Following an example on how to include it.
 ```html
 <script
-  src="//cdnjs.cloudflare.com/ajax/libs/dom4/1.4.4/dom4.js"
+  src="//cdnjs.cloudflare.com/ajax/libs/dom4/1.4.5/dom4.js"
 >/* DOM4 */</script>
 ```
 
