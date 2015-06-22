@@ -375,6 +375,49 @@ THE SOFTWARE.
     });
   }
 
+  // requestAnimationFrame partial polyfill
+  (function () {
+    for (var
+      raf,
+      rAF = window.requestAnimationFrame,
+      cAF = window.cancelAnimationFrame,
+      prefixes = ['o', 'ms', 'moz', 'webkit'],
+      i = prefixes.length;
+      !cAF && i--;
+    ) {
+      rAF = rAF || window[prefixes[i] + 'RequestAnimationFrame'];
+      cAF = window[prefixes[i] + 'CancelAnimationFrame'] ||
+            window[prefixes[i] + 'CancelRequestAnimationFrame'];
+    }
+    if (!cAF) {
+      // some FF apparently implemented rAF but no cAF 
+      if (rAF) {
+        raf = rAF;
+        rAF = function (callback) {
+          var goOn = true;
+          raf(function () {
+            if (goOn) callback.apply(this, arguments);
+          });
+          return function () {
+            goOn = false;
+          };
+        };
+        cAF = function (id) {
+          id();
+        };
+      } else {
+        rAF = function (callback) {
+          return setTimeout(callback, 15, 15);
+        };
+        cAF = function (id) {
+          clearTimeout(id);
+        };
+      }
+    }
+    window.requestAnimationFrame = rAF;
+    window.cancelAnimationFrame = cAF;
+  }());
+
   // http://www.w3.org/TR/dom/#customevent
   try{new window.CustomEvent('?');}catch(o_O){
     window.CustomEvent = function(

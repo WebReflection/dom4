@@ -434,6 +434,24 @@ wru.test([
       wru.assert('DocumentFragment#query', df.query);
       wru.assert('DocumentFragment#queryAll', df.queryAll);
     }
+  }, {
+    name: 'requestAnimationFrame',
+    test: function () {
+      requestAnimationFrame(wru.async(function () {
+        wru.assert('OK');
+      }));
+    }
+  }, {
+    name: 'cancelAnimationFrame',
+    test: function () {
+      var called = false, ok = wru.async(function () {
+        wru.assert('never executed', !called);
+      });
+      cancelAnimationFrame(requestAnimationFrame(function () {
+        called = true;
+      }));
+      setTimeout(ok, 250);
+    }
   }
 ].concat(
   typeof ShadowRoot === 'function' ?

@@ -1,7 +1,6 @@
 {
     "name": "DOM4",
     "description": "new DOM Level 4 entries",
-    "version": "1.4.5",
     "main": "build/dom4.max.js",
     "ignore": [
         "test",
