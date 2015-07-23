@@ -91,6 +91,10 @@
       return !!force;
     },
     DocumentFragment = window.DocumentFragment,
+    CharacterData = window.CharacterData || window.Node,
+    CharacterDataPrototype = CharacterData && CharacterData.prototype,
+    DocumentType = window.DocumentType,
+    DocumentTypePrototype = DocumentType && DocumentType.prototype,
     ElementPrototype = (window.Element || window.Node || window.HTMLElement).prototype,
     ShadowRoot = window.ShadowRoot,
     SVGElement = window.SVGElement,
@@ -223,6 +227,14 @@
     property = properties[i - 2];
     if (!(property in ElementPrototype)) {
       ElementPrototype[property] = properties[i - 1];
+    }
+    if (/before|after|replace|remove/.test(property)) {
+      if (CharacterData && !(property in CharacterDataPrototype)) {
+        CharacterDataPrototype[property] = properties[i - 1];
+      }
+      if (DocumentType && !(property in DocumentTypePrototype)) {
+        DocumentTypePrototype[property] = properties[i - 1];
+      }
     }
   }
 
