@@ -23,15 +23,17 @@ THE SOFTWARE.
 (function(window){'use strict';
   /* jshint loopfunc: true, noempty: false*/
   // http://www.w3.org/TR/dom/#element
-  function textNodeIfString(node) {
-    return typeof node === 'string' ? document.createTextNode(node) : node;
+
+  function createDocumentFragment() {
+    return document.createDocumentFragment();
   }
+
   function mutationMacro(nodes) {
     if (nodes.length === 1) {
       return textNodeIfString(nodes[0]);
     }
     for (var
-      fragment = document.createDocumentFragment(),
+      fragment = createDocumentFragment(),
       list = slice.call(nodes),
       i = 0; i < nodes.length; i++
     ) {
@@ -39,6 +41,11 @@ THE SOFTWARE.
     }
     return fragment;
   }
+
+  function textNodeIfString(node) {
+    return typeof node === 'string' ? document.createTextNode(node) : node;
+  }
+
   for(var
     head,
     property,
@@ -105,8 +112,56 @@ THE SOFTWARE.
       }
       return !!force;
     },
+    DocumentFragment = window.DocumentFragment,
+    CharacterData = window.CharacterData || window.Node,
+    CharacterDataPrototype = CharacterData && CharacterData.prototype,
+    DocumentType = window.DocumentType,
+    DocumentTypePrototype = DocumentType && DocumentType.prototype,
     ElementPrototype = (window.Element || window.Node || window.HTMLElement).prototype,
+    ShadowRoot = window.ShadowRoot,
     SVGElement = window.SVGElement,
+    // normalizes multiple ids as CSS query
+    idSpaceFinder = / /g,
+    idSpaceReplacer = '\\ ',
+    createQueryMethod = function (methodName) {
+      var createArray = methodName === 'querySelectorAll';
+      return function (css) {
+        var a, i, id, query, nl, selectors, node = this.parentNode;
+        if (node) {
+          for (
+            id = this.getAttribute('id') || uid,
+            query = id === uid ? id : id.replace(idSpaceFinder, idSpaceReplacer),
+            selectors = css.split(','),
+            i = 0; i < selectors.length; i++
+          ) {
+            selectors[i] = '#' + query + ' ' + selectors[i];
+          }
+          css = selectors.join(',');
+        }
+        if (id === uid) this.setAttribute('id', id);
+        nl = (node || this)[methodName](css);
+        if (id === uid) this.removeAttribute('id');
+        // return a list
+        if (createArray) {
+          i = nl.length;
+          a = new Array(i);
+          while (i--) a[i] = nl[i];
+        }
+        // return node or null
+        else {
+          a = nl;
+        }
+        return a;
+      };
+    },
+    addQueryAndAll = function (where) {
+      if (!('query' in where)) {
+        where.query = ElementPrototype.query;
+      }
+      if (!('queryAll' in where)) {
+        where.queryAll = ElementPrototype.queryAll;
+      }
+    },
     properties = [
       'matches', (
         ElementPrototype.matchesSelector ||
@@ -185,29 +240,8 @@ THE SOFTWARE.
           parentNode.removeChild(this);
         }
       },
-      'query', function query(css) {
-        return this.queryAll(css)[0] || null;
-      },
-      'queryAll', function queryAll(css) {
-        var a, i, id, nl, selectors, node = this.parentNode;
-        if (node) {
-          for (
-            id = this.getAttribute('id') || uid,
-            selectors = css.split(','),
-            i = 0; i < selectors.length; i++
-          ) {
-            selectors[i] = '#' + id + ' ' + selectors[i];
-          }
-          css = selectors.join(',');
-        }
-        if (id === uid) this.setAttribute('id', id);
-        nl = (node || this).querySelectorAll(css);
-        if (id === uid) this.removeAttribute('id');
-        i = nl.length;
-        a = new Array(i);
-        while (i--) a[i] = nl[i];
-        return a;
-      }
+      'query', createQueryMethod('querySelector'),
+      'queryAll', createQueryMethod('querySelectorAll')
     ],
     slice = properties.slice,
     i = properties.length; i; i -= 2
@@ -216,14 +250,31 @@ THE SOFTWARE.
     if (!(property in ElementPrototype)) {
       ElementPrototype[property] = properties[i - 1];
     }
+    if (/before|after|replace|remove/.test(property)) {
+      if (CharacterData && !(property in CharacterDataPrototype)) {
+        CharacterDataPrototype[property] = properties[i - 1];
+      }
+      if (DocumentType && !(property in DocumentTypePrototype)) {
+        DocumentTypePrototype[property] = properties[i - 1];
+      }
+    }
   }
 
   // bring query and queryAll to the document too
-  if (!('query' in document)) {
-    document.query = ElementPrototype.query;
+  addQueryAndAll(document);
+
+  // brings query and queryAll to fragments as well
+  if (DocumentFragment) {
+    addQueryAndAll(DocumentFragment.prototype);
+  } else {
+    try {
+      addQueryAndAll(createDocumentFragment().constructor.prototype);
+    } catch(o_O) {}
   }
-  if (!('queryAll' in document)) {
-    document.queryAll = ElementPrototype.queryAll;
+
+  // bring query and queryAll to the ShadowRoot too
+  if (ShadowRoot) {
+    addQueryAndAll(ShadowRoot.prototype);
   }
 
   // most likely an IE9 only issue
@@ -234,7 +285,7 @@ THE SOFTWARE.
         return matches.call(
           this.parentNode ?
             this :
-            document.createDocumentFragment().appendChild(this),
+            createDocumentFragment().appendChild(this),
           selector
         );
       };
@@ -335,6 +386,49 @@ THE SOFTWARE.
       }
     });
   }
+
+  // requestAnimationFrame partial polyfill
+  (function () {
+    for (var
+      raf,
+      rAF = window.requestAnimationFrame,
+      cAF = window.cancelAnimationFrame,
+      prefixes = ['o', 'ms', 'moz', 'webkit'],
+      i = prefixes.length;
+      !cAF && i--;
+    ) {
+      rAF = rAF || window[prefixes[i] + 'RequestAnimationFrame'];
+      cAF = window[prefixes[i] + 'CancelAnimationFrame'] ||
+            window[prefixes[i] + 'CancelRequestAnimationFrame'];
+    }
+    if (!cAF) {
+      // some FF apparently implemented rAF but no cAF 
+      if (rAF) {
+        raf = rAF;
+        rAF = function (callback) {
+          var goOn = true;
+          raf(function () {
+            if (goOn) callback.apply(this, arguments);
+          });
+          return function () {
+            goOn = false;
+          };
+        };
+        cAF = function (id) {
+          id();
+        };
+      } else {
+        rAF = function (callback) {
+          return setTimeout(callback, 15, 15);
+        };
+        cAF = function (id) {
+          clearTimeout(id);
+        };
+      }
+    }
+    window.requestAnimationFrame = rAF;
+    window.cancelAnimationFrame = cAF;
+  }());
 
   // http://www.w3.org/TR/dom/#customevent
   try{new window.CustomEvent('?');}catch(o_O){

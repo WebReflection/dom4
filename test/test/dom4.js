@@ -427,5 +427,46 @@ wru.test([
       wru.assert('queryAll returns only relative', div.queryAll('body ul').length === 0);
       div.remove();
     }
+  }, {
+    name: 'DocumentFragment query/queryAll',
+    test: function () {
+      var df = document.createDocumentFragment();
+      wru.assert('DocumentFragment#query', df.query);
+      wru.assert('DocumentFragment#queryAll', df.queryAll);
+    }
+  }, {
+    name: 'requestAnimationFrame',
+    test: function () {
+      requestAnimationFrame(wru.async(function () {
+        wru.assert('OK');
+      }));
+    }
+  }, {
+    name: 'cancelAnimationFrame',
+    test: function () {
+      var called = false, ok = wru.async(function () {
+        wru.assert('never executed', !called);
+      });
+      cancelAnimationFrame(requestAnimationFrame(function () {
+        called = true;
+      }));
+      setTimeout(ok, 250);
+    }
+  }, {
+    name: 'comments',
+    test: function () {
+      var c = document.createComment('this is a comment');
+      wru.assert('comment has methods', !!c.remove);
+    }
   }
-]);
+].concat(
+  typeof ShadowRoot === 'function' ?
+  [{
+    name: 'ShadowRoot query/queryAll',
+    test: function () {
+      wru.assert('ShadowRoot#query', ShadowRoot.prototype.query);
+      wru.assert('ShadowRoot#queryAll', ShadowRoot.prototype.queryAll);
+    }
+  }] :
+  []
+));
