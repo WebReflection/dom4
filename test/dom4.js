@@ -452,6 +452,12 @@ wru.test([
       }));
       setTimeout(ok, 250);
     }
+  }, {
+    name: 'comments',
+    test: function () {
+      var c = document.createComment('this is a comment');
+      wru.assert('comment has methods', !!c.remove);
+    }
   }
 ].concat(
   typeof ShadowRoot === 'function' ?
