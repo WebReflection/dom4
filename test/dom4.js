@@ -157,12 +157,14 @@ wru.test([
     name: 'remove',
     test: function () {
       var div = create('div'),
-          first = div.appendChild(create('div'));
+          first = div.appendChild(create('div')),
+          select = div.appendChild(create('select'));
       wru.assert(
         'If the context object does not have a parent, terminate these steps',
         !div.remove()
       );
       first.remove();
+      select.remove();
       wru.assert(
         "Remove the context object from the context object's parent.",
         div.childNodes.length === 0
