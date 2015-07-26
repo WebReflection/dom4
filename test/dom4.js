@@ -458,6 +458,24 @@ wru.test([
       var c = document.createComment('this is a comment');
       wru.assert('comment has methods', !!c.remove);
     }
+  }, {
+    name: 'select',
+    test: function  () {
+      var
+        select = document.body.appendChild(
+          document.createElement('select')
+        ),
+        option = select.appendChild(
+          document.createElement('option')
+        )
+      ;
+      wru.assert('option is present', select.firstChild === option);
+      select.remove(0);
+      wru.assert('select.remove(index) works', select.firstChild !== option);
+      wru.assert('select.remove(index) did not remove the select', !!select.parentNode);
+      select.remove();
+      wru.assert('select.remove() removed the select', !select.parentNode);
+    }
   }
 ].concat(
   typeof ShadowRoot === 'function' ?

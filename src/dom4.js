@@ -6,6 +6,10 @@
     return document.createDocumentFragment();
   }
 
+  function createElement(nodeName) {
+    return document.createElement(nodeName);
+  }
+
   function mutationMacro(nodes) {
     if (nodes.length === 1) {
       return textNodeIfString(nodes[0]);
@@ -96,6 +100,8 @@
     DocumentType = window.DocumentType,
     DocumentTypePrototype = DocumentType && DocumentType.prototype,
     ElementPrototype = (window.Element || window.Node || window.HTMLElement).prototype,
+    HTMLSelectElement = window.HTMLSelectElement || createElement('select').constructor,
+    selectRemove = HTMLSelectElement.prototype.remove,
     ShadowRoot = window.ShadowRoot,
     SVGElement = window.SVGElement,
     // normalizes multiple ids as CSS query
@@ -228,6 +234,15 @@
     if (!(property in ElementPrototype)) {
       ElementPrototype[property] = properties[i - 1];
     }
+    if (property === 'remove') {
+      // see https://github.com/WebReflection/dom4/issues/19
+      HTMLSelectElement.prototype[property] = function () {
+        return 0 < arguments.length ?
+          selectRemove.apply(this, arguments) :
+          ElementPrototype.remove.call(this);
+      };
+    }
+    // see https://github.com/WebReflection/dom4/issues/18
     if (/before|after|replace|remove/.test(property)) {
       if (CharacterData && !(property in CharacterDataPrototype)) {
         CharacterDataPrototype[property] = properties[i - 1];
@@ -257,7 +272,7 @@
 
   // most likely an IE9 only issue
   // see https://github.com/WebReflection/dom4/issues/6
-  if (!document.createElement('a').matches('a')) {
+  if (!createElement('a').matches('a')) {
     ElementPrototype[property] = function(matches){
       return function (selector) {
         return matches.call(
@@ -331,7 +346,7 @@
   } else {
     // iOS 5.1 and Nokia ASHA do not support multiple add or remove
     // trying to detect and fix that in here
-    TemporaryTokenList = document.createElement('div')[CLASS_LIST];
+    TemporaryTokenList = createElement('div')[CLASS_LIST];
     TemporaryTokenList.add('a', 'b', 'a');
     if ('a\x20b' != TemporaryTokenList) {
       // no other way to reach original methods in iOS 5.1
