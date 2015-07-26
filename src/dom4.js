@@ -95,6 +95,7 @@
       return !!force;
     },
     DocumentFragment = window.DocumentFragment,
+    SelectElement = window.HTMLSelectElement && HTMLSelectElement.prototype,
     CharacterData = window.CharacterData || window.Node,
     CharacterDataPrototype = CharacterData && CharacterData.prototype,
     DocumentType = window.DocumentType,
@@ -218,7 +219,10 @@
           );
         }
       },
-      'remove', function remove() {
+      'remove', function remove(index) {
+        if (this.nativeRemove && index !== undefined) {
+          return this.nativeRemove(index);
+        }
         var parentNode = this.parentNode;
         if (parentNode) {
           parentNode.removeChild(this);
@@ -233,6 +237,10 @@
     property = properties[i - 2];
     if (!(property in ElementPrototype)) {
       ElementPrototype[property] = properties[i - 1];
+      if (/remove/.test(property) && SelectElement) {
+        SelectElement['native' + property.charAt(0).toUpperCase() + property.slice(1)] = SelectElement[property];
+        SelectElement[property] = properties[i - 1];
+      }
     }
     if (property === 'remove') {
       // see https://github.com/WebReflection/dom4/issues/19

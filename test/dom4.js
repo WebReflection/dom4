@@ -157,12 +157,20 @@ wru.test([
     name: 'remove',
     test: function () {
       var div = create('div'),
-          first = div.appendChild(create('div'));
+          first = div.appendChild(create('div')),
+          select = div.appendChild(create('select'));
+      select.add(create('option'));
       wru.assert(
         'If the context object does not have a parent, terminate these steps',
         !div.remove()
       );
+      select.remove(0);
+      wru.assert(
+        "Remove the option, we don't broken native remove from select.",
+        select.childNodes.length === 0
+      )
       first.remove();
+      select.remove();
       wru.assert(
         "Remove the context object from the context object's parent.",
         div.childNodes.length === 0
