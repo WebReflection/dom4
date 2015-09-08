@@ -295,6 +295,9 @@ wru.test([
       wru.assert('detail not attached', e.detail == null);
       wru.assert('not cancelable', e.cancelable === false);
       wru.assert('not bubbling', e.bubbles === false);
+      // in Chrome,  once you access detail you cannot define it
+      // https://code.google.com/p/chromium/issues/detail?id=529185
+      e = new CustomEvent('type');
       e.initCustomEvent('retype', true, true, detail);
       // TODO: WTF should happen here ?
       //  FF says type, other redefine ergardless
@@ -320,6 +323,7 @@ wru.test([
       wru.assert('detail not attached', e.detail == null);
       wru.assert('not cancelable', e.cancelable === false);
       wru.assert('not bubbling', e.bubbles === false);
+      e = new CustomEvent('type only');
       e.initCustomEvent(e.type, true, true, 123);
       wru.assert('still right type', e.type === 'type only');
       wru.assert('detail attached', e.detail === 123);
@@ -475,6 +479,24 @@ wru.test([
       wru.assert('select.remove(index) did not remove the select', !!select.parentNode);
       select.remove();
       wru.assert('select.remove() removed the select', !select.parentNode);
+    }
+  },{
+    name: 'requestAnimationFrame',
+    test: function () {
+      requestAnimationFrame(wru.async(function () {
+        wru.assert('OK');
+      }));
+    }
+  }, {
+    name: 'cancelAnimationFrame',
+    test: function () {
+      var i = 0;
+      cancelAnimationFrame(requestAnimationFrame(function () {
+        ++i;
+      }));
+      setTimeout(wru.async(function () {
+        wru.assert('canceled', i === 0);
+      }), 250);
     }
   }
 ].concat(

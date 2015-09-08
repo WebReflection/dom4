@@ -28,14 +28,14 @@
   ],
   "scripts": {
     "test": "phantomjs testrunner.js",
-    "web": "IP=0.0.0.0 node node_modules/polpetta"
+    "web": "node node_modules/tiny-cdn/tiny-cdn run -p=1337"
   },
   "dependencies": {},
   "devDependencies": {
     "wru": "~0.2.x",
     "uglify-js": "1.x",
     "jshint": "~2.x",
-    "polpetta": "~0.3.x",
+    "tiny-cdn": "*",
     "phantomjs": "~1.x"
   }
 }
