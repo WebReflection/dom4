@@ -498,6 +498,13 @@ wru.test([
         wru.assert('canceled', i === 0);
       }), 250);
     }
+  }, {
+    name: 'contains',
+    test: function () {
+      wru.assert('self aware', document.body.contains(document.body));
+      wru.assert('can fail aware', !document.body.contains(document));
+      wru.assert('can work', document.contains(document.body));
+    }
   }
 ].concat(
   typeof ShadowRoot === 'function' ?

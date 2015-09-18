@@ -95,11 +95,13 @@
       return !!force;
     },
     DocumentFragment = window.DocumentFragment,
-    CharacterData = window.CharacterData || window.Node,
+    Node = window.Node,
+    NodePrototype = Node && NodePrototype,
+    CharacterData = window.CharacterData || Node,
     CharacterDataPrototype = CharacterData && CharacterData.prototype,
     DocumentType = window.DocumentType,
     DocumentTypePrototype = DocumentType && DocumentType.prototype,
-    ElementPrototype = (window.Element || window.Node || window.HTMLElement).prototype,
+    ElementPrototype = (window.Element || Node || window.HTMLElement).prototype,
     HTMLSelectElement = window.HTMLSelectElement || createElement('select').constructor,
     selectRemove = HTMLSelectElement.prototype.remove,
     ShadowRoot = window.ShadowRoot,
@@ -368,6 +370,15 @@
       // toggle is broken too ^_^ ... let's fix it
       TemporaryPrototype.toggle = toggle;
     }
+  }
+
+  if (!('contains' in NodePrototype)) {
+    defineProperty(NodePrototype, 'contains', {
+      value: function (el) {
+        while (el && el !== this) el = el.parentNode;
+        return this === el;
+      }
+    });
   }
 
   if (!('head' in document)) {
