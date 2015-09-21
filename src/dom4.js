@@ -176,36 +176,18 @@
         return matches ? parentNode : null;
       },
       'prepend', function prepend() {
-        var firstChild = this.firstChild,
-            node = mutationMacro(arguments);
-        if (firstChild) {
-          this.insertBefore(node, firstChild);
-        } else {
-          this.appendChild(node);
-        }
+        this.insertBefore(mutationMacro(arguments), this.firstChild);
       },
       'append', function append() {
         this.appendChild(mutationMacro(arguments));
       },
       'before', function before() {
         var parentNode = this.parentNode;
-        if (parentNode) {
-          parentNode.insertBefore(
-            mutationMacro(arguments), this
-          );
-        }
+        parentNode && parentNode.insertBefore(mutationMacro(arguments), this);
       },
       'after', function after() {
-        var parentNode = this.parentNode,
-            nextSibling = this.nextSibling,
-            node = mutationMacro(arguments);
-        if (parentNode) {
-          if (nextSibling) {
-            parentNode.insertBefore(node, nextSibling);
-          } else {
-            parentNode.appendChild(node);
-          }
-        }
+        var parentNode = this.parentNode;
+        parentNode && parentNode.insertBefore(mutationMacro(arguments), this.nextSibling);
       },
       // WARNING - DEPRECATED - use .replaceWith() instead
       'replace', function replace() {
