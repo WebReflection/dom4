@@ -96,7 +96,7 @@
     },
     DocumentFragment = window.DocumentFragment,
     Node = window.Node,
-    NodePrototype = Node && Node.prototype,
+    NodePrototype = (Node || Element).prototype,
     CharacterData = window.CharacterData || Node,
     CharacterDataPrototype = CharacterData && CharacterData.prototype,
     DocumentType = window.DocumentType,

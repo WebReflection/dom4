@@ -1,5 +1,5 @@
 /*!
-Copyright (C) 2013 by WebReflection
+Copyright (C) 2013-2015 by Andrea Giammarchi - @WebReflection
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -118,7 +118,7 @@ THE SOFTWARE.
     },
     DocumentFragment = window.DocumentFragment,
     Node = window.Node,
-    NodePrototype = Node && Node.prototype,
+    NodePrototype = (Node || Element).prototype,
     CharacterData = window.CharacterData || Node,
     CharacterDataPrototype = CharacterData && CharacterData.prototype,
     DocumentType = window.DocumentType,
