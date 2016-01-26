@@ -34,6 +34,7 @@ Other fixes/standardized behaviors include:
   * [CustomEvent](http://www.w3.org/TR/dom/#customevent) constructor for all browsers down to IE8
   * [Element#matches](https://dom.spec.whatwg.org/#dom-element-matches) utility to test elements against CSS selectors
   * [Element#closest](https://dom.spec.whatwg.org/#dom-element-closest) utility to find element inclusive ancestor via CSS selectors
+  * [Node#contains](https://dom.spec.whatwg.org/#dom-node-contains) utility to know if another node is inside the current one
   * `requestAnimationFrame` and `cancelAnimationFrame` are polyfilled too but the least legacy fallback to setTimeout does not support accurate timing and doesn't slow down execution with that logic. Feel free to load upfront other polyfills if needed.
 
 The **DOM4** license is Mit Style.
