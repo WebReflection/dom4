@@ -16,6 +16,7 @@ This is a [fully tested](http://webreflection.github.io/dom4/test/) and covered 
 
   * Element#prepend()
   * Element#append()
+  * Element#contains()
 
 And for [new DOM Level 4 childNode entries](https://dom.spec.whatwg.org/#childnode):
 
