@@ -116,7 +116,7 @@ THE SOFTWARE.
       }
       return !!force;
     },
-    DocumentFragment = window.DocumentFragment,
+    DocumentFragmentPrototype = window.DocumentFragment && DocumentFragment.prototype,
     Node = window.Node,
     NodePrototype = (Node || Element).prototype,
     CharacterData = window.CharacterData || Node,
@@ -267,12 +267,24 @@ THE SOFTWARE.
       };
     }
     // see https://github.com/WebReflection/dom4/issues/18
-    if (/before|after|replace|remove/.test(property)) {
+    if (/^(?:before|after|replace|replaceWith|remove)$/.test(property)) {
       if (CharacterData && !(property in CharacterDataPrototype)) {
         CharacterDataPrototype[property] = properties[i - 1];
       }
       if (DocumentType && !(property in DocumentTypePrototype)) {
         DocumentTypePrototype[property] = properties[i - 1];
+      }
+    }
+    // see https://github.com/WebReflection/dom4/pull/26
+    if (/^(?:append|prepend)$/.test(property)) {
+      if (DocumentFragmentPrototype) {
+        if (!(property in DocumentFragmentPrototype)) {
+          DocumentFragmentPrototype[property] = properties[i - 1];
+        }
+      } else {
+        try {
+          createDocumentFragment().constructor.prototype[property] = properties[i - 1];
+        } catch(o_O) {}
       }
     }
   }
@@ -281,8 +293,8 @@ THE SOFTWARE.
   addQueryAndAll(document);
 
   // brings query and queryAll to fragments as well
-  if (DocumentFragment) {
-    addQueryAndAll(DocumentFragment.prototype);
+  if (DocumentFragmentPrototype) {
+    addQueryAndAll(DocumentFragmentPrototype);
   } else {
     try {
       addQueryAndAll(createDocumentFragment().constructor.prototype);

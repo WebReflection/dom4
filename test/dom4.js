@@ -505,6 +505,13 @@ wru.test([
       wru.assert('can fail aware', !document.body.contains(document));
       wru.assert('can work', document.contains(document.body));
     }
+  }, {
+    name: 'DocumentFragment implements ParentNode interface',
+    test: function () {
+      var df = document.createDocumentFragment();
+      wru.assert('it has an append method', typeof df.append === 'function');
+      wru.assert('it has an prepend method', typeof df.prepend === 'function');
+    }
   }
 ].concat(
   typeof ShadowRoot === 'function' ?
