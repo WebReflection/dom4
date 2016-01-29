@@ -275,6 +275,16 @@ THE SOFTWARE.
         DocumentTypePrototype[property] = properties[i - 1];
       }
     }
+    // see https://github.com/WebReflection/dom4/issues/26
+    if (/append|prepend/.test(property)) {
+      if (DocumentFragment) {
+        DocumentFragment.prototype[property] = properties[i - 1];
+      } else {
+        try {
+          createDocumentFragment().constructor.prototype[property] = properties[i - 1];
+        } catch(o_O) {}
+      }
+    }
   }
 
   // bring query and queryAll to the document too
