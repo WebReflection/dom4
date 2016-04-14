@@ -10,6 +10,14 @@
     return document.createElement(nodeName);
   }
 
+  function enoughArguments(length, name) {
+    if (!length) throw new Error(
+      'Failed to construct ' +
+        name +
+      ': 1 argument required, but only 0 present.'
+    );
+  }
+
   function mutationMacro(nodes) {
     if (nodes.length === 1) {
       return textNodeIfString(nodes[0]);
@@ -500,6 +508,86 @@
         detail: null
       }
     );
+  }
+
+  // window.KeyboardEvent as constructor
+  try { new KeyboardEvent({}); } catch (o_O) {
+    defineProperty(window, 'KeyboardEvent', {
+      value: (function ($KeyboardEvent) {
+        function getModifier(init) {
+          for (var
+            out = [],
+            keys = [
+              'ctrlKey',
+              'Control',
+              'shiftKey',
+              'Shift',
+              'altKey',
+              'Alt',
+              'metaKey',
+              'Meta'
+            ],
+            i = 0; i < keys.length; i += 2
+          ) {
+            if (init[keys[i]])
+              out.push(keys[i + 1]);
+          }
+          return out.join(' ');
+        }
+        function KeyboardEvent(type, init) {
+          enoughArguments(arguments.length, 'KeyboardEvent');
+          var out = document.createEvent('KeyboardEvent');
+          if (!init) init = {};
+          out.initKeyboardEvent(
+            type,
+            !!init.bubbles,
+            !!init.cancelable,
+            init.view || window,
+            init.code || '',
+            init.key || '',
+            init.location || 0,
+            getModifier(init),
+            !!init.repeat
+          );
+          return out;
+        }
+        KeyboardEvent.prototype = $KeyboardEvent.prototype;
+        return KeyboardEvent;
+      }(window.KeyboardEvent || function KeyboardEvent() {}))
+    });
+  }
+
+  // window.MouseEvent as constructor
+  try { new MouseEvent('', {}); } catch (o_O) {
+    defineProperty(window, 'MouseEvent', {
+      value: (function ($MouseEvent) {
+        function MouseEvent(type, init) {
+          enoughArguments(arguments.length, 'MouseEvent');
+          var out = document.createEvent('MouseEvent');
+          if (!init) init = {};
+          out.initMouseEvent(
+            type,
+            !!init.bubbles,
+            !!init.cancelable,
+            init.view || window,
+            init.detail || 1,
+            init.screenX || 0,
+            init.screenY || 0,
+            init.clientX || 0,
+            init.clientY || 0,
+            !!init.ctrlKey,
+            !!init.altKey,
+            !!init.shiftKey,
+            !!init.metaKey,
+            init.button || 0,
+            init.relatedTarget || null
+          );
+          return out;
+        }
+        MouseEvent.prototype = $MouseEvent.prototype;
+        return MouseEvent;
+      }(window.MouseEvent || function MouseEvent() {}))
+    });
   }
 
 }(window));
