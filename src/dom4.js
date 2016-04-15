@@ -543,11 +543,11 @@
             !!init.bubbles,
             !!init.cancelable,
             init.view || window,
-            init.code || '',
-            init.key || '',
+            init.key || init.code || '',
             init.location || 0,
             getModifier(init),
-            !!init.repeat
+            !!init.repeat,
+            navigator.language
           );
           return out;
         }
