@@ -520,7 +520,7 @@ wru.test([
       div.addEventListener('keypress', wru.async(function (e) {
         wru.assert('info passed through', e.metaKey);
       }));
-      div.dispatchEvent(ke);
+      setTimeout(function () { div.dispatchEvent(ke); }, 100);
     }
   }, {
     name: 'MouseEvent',
@@ -530,7 +530,7 @@ wru.test([
       div.addEventListener('mousedown', wru.async(function (e) {
         wru.assert('info passed through', e.clientX === 123);
       }));
-      div.dispatchEvent(ke);
+      setTimeout(function () { div.dispatchEvent(ke); }, 100);
     }
   }
 ].concat(
