@@ -534,47 +534,49 @@ THE SOFTWARE.
 
   // window.KeyboardEvent as constructor
   try { new KeyboardEvent('', {}); } catch (o_O) {
-    window.KeyboardEvent = (function ($KeyboardEvent) {
-      function getModifier(init) {
-        for (var
-          out = [],
-          keys = [
-            'ctrlKey',
-            'Control',
-            'shiftKey',
-            'Shift',
-            'altKey',
-            'Alt',
-            'metaKey',
-            'Meta'
-          ],
-          i = 0; i < keys.length; i += 2
-        ) {
-          if (init[keys[i]])
-            out.push(keys[i + 1]);
+    defineProperty(window, 'KeyboardEvent', {
+      value: (function ($KeyboardEvent) {
+        function getModifier(init) {
+          for (var
+            out = [],
+            keys = [
+              'ctrlKey',
+              'Control',
+              'shiftKey',
+              'Shift',
+              'altKey',
+              'Alt',
+              'metaKey',
+              'Meta'
+            ],
+            i = 0; i < keys.length; i += 2
+          ) {
+            if (init[keys[i]])
+              out.push(keys[i + 1]);
+          }
+          return out.join(' ');
         }
-        return out.join(' ');
-      }
-      function KeyboardEvent(type, init) {
-        enoughArguments(arguments.length, 'KeyboardEvent');
-        var out = document.createEvent('KeyboardEvent');
-        if (!init) init = {};
-        out.initKeyboardEvent(
-          type,
-          !!init.bubbles,
-          !!init.cancelable,
-          init.view || window,
-          init.code || '',
-          init.key || '',
-          init.location || 0,
-          getModifier(init),
-          !!init.repeat
-        );
-        return out;
-      }
-      KeyboardEvent.prototype = $KeyboardEvent.prototype;
-      return KeyboardEvent;
-    }(window.KeyboardEvent || function KeyboardEvent() {}));
+        function KeyboardEvent(type, init) {
+          enoughArguments(arguments.length, 'KeyboardEvent');
+          var out = document.createEvent('KeyboardEvent');
+          if (!init) init = {};
+          out.initKeyboardEvent(
+            type,
+            !!init.bubbles,
+            !!init.cancelable,
+            init.view || window,
+            init.code || '',
+            init.key || '',
+            init.location || 0,
+            getModifier(init),
+            !!init.repeat
+          );
+          return out;
+        }
+        KeyboardEvent.prototype = $KeyboardEvent.prototype;
+        return KeyboardEvent;
+      }(window.KeyboardEvent || function KeyboardEvent() {}))
+    });
   }
 
   // window.MouseEvent as constructor
