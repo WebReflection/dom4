@@ -498,6 +498,40 @@ wru.test([
         wru.assert('canceled', i === 0);
       }), 250);
     }
+  }, {
+    name: 'contains',
+    test: function () {
+      wru.assert('self aware', document.body.contains(document.body));
+      wru.assert('can fail aware', !document.body.contains(document));
+      wru.assert('can work', document.contains(document.body));
+    }
+  }, {
+    name: 'DocumentFragment implements ParentNode interface',
+    test: function () {
+      var df = document.createDocumentFragment();
+      wru.assert('it has an append method', typeof df.append === 'function');
+      wru.assert('it has an prepend method', typeof df.prepend === 'function');
+    }
+  }, {
+    name: 'KeyboardEvent',
+    test: function () {
+      var ke = new KeyboardEvent('keypress', {metaKey: true});
+      var div = document.createElement('div');
+      div.addEventListener('keypress', wru.async(function (e) {
+        wru.assert('info passed through', e.metaKey);
+      }));
+      div.dispatchEvent(ke);
+    }
+  }, {
+    name: 'MouseEvent',
+    test: function () {
+      var ke = new MouseEvent('mousedown', {clientX: 123});
+      var div = document.createElement('div');
+      div.addEventListener('mousedown', wru.async(function (e) {
+        wru.assert('info passed through', e.clientX === 123);
+      }));
+      div.dispatchEvent(ke);
+    }
   }
 ].concat(
   typeof ShadowRoot === 'function' ?

@@ -1,5 +1,5 @@
 /*!
-Copyright (C) 2013 by WebReflection
+Copyright (C) 2013-2015 by Andrea Giammarchi - @WebReflection
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,14 @@ THE SOFTWARE.
 
   function createElement(nodeName) {
     return document.createElement(nodeName);
+  }
+
+  function enoughArguments(length, name) {
+    if (!length) throw new Error(
+      'Failed to construct ' +
+        name +
+      ': 1 argument required, but only 0 present.'
+    );
   }
 
   function mutationMacro(nodes) {
@@ -116,12 +124,14 @@ THE SOFTWARE.
       }
       return !!force;
     },
-    DocumentFragment = window.DocumentFragment,
-    CharacterData = window.CharacterData || window.Node,
+    DocumentFragmentPrototype = window.DocumentFragment && DocumentFragment.prototype,
+    Node = window.Node,
+    NodePrototype = (Node || Element).prototype,
+    CharacterData = window.CharacterData || Node,
     CharacterDataPrototype = CharacterData && CharacterData.prototype,
     DocumentType = window.DocumentType,
     DocumentTypePrototype = DocumentType && DocumentType.prototype,
-    ElementPrototype = (window.Element || window.Node || window.HTMLElement).prototype,
+    ElementPrototype = (window.Element || Node || window.HTMLElement).prototype,
     HTMLSelectElement = window.HTMLSelectElement || createElement('select').constructor,
     selectRemove = HTMLSelectElement.prototype.remove,
     ShadowRoot = window.ShadowRoot,
@@ -265,12 +275,24 @@ THE SOFTWARE.
       };
     }
     // see https://github.com/WebReflection/dom4/issues/18
-    if (/before|after|replace|remove/.test(property)) {
+    if (/^(?:before|after|replace|replaceWith|remove)$/.test(property)) {
       if (CharacterData && !(property in CharacterDataPrototype)) {
         CharacterDataPrototype[property] = properties[i - 1];
       }
       if (DocumentType && !(property in DocumentTypePrototype)) {
         DocumentTypePrototype[property] = properties[i - 1];
+      }
+    }
+    // see https://github.com/WebReflection/dom4/pull/26
+    if (/^(?:append|prepend)$/.test(property)) {
+      if (DocumentFragmentPrototype) {
+        if (!(property in DocumentFragmentPrototype)) {
+          DocumentFragmentPrototype[property] = properties[i - 1];
+        }
+      } else {
+        try {
+          createDocumentFragment().constructor.prototype[property] = properties[i - 1];
+        } catch(o_O) {}
       }
     }
   }
@@ -279,8 +301,8 @@ THE SOFTWARE.
   addQueryAndAll(document);
 
   // brings query and queryAll to fragments as well
-  if (DocumentFragment) {
-    addQueryAndAll(DocumentFragment.prototype);
+  if (DocumentFragmentPrototype) {
+    addQueryAndAll(DocumentFragmentPrototype);
   } else {
     try {
       addQueryAndAll(createDocumentFragment().constructor.prototype);
@@ -392,6 +414,15 @@ THE SOFTWARE.
     }
   }
 
+  if (!('contains' in NodePrototype)) {
+    defineProperty(NodePrototype, 'contains', {
+      value: function (el) {
+        while (el && el !== this) el = el.parentNode;
+        return this === el;
+      }
+    });
+  }
+
   if (!('head' in document)) {
     defineProperty(document, 'head', {
       get: function () {
@@ -499,6 +530,86 @@ THE SOFTWARE.
         detail: null
       }
     );
+  }
+
+  // window.KeyboardEvent as constructor
+  try { new KeyboardEvent('', {}); } catch (o_O) {
+    defineProperty(window, 'KeyboardEvent', {
+      value: (function ($KeyboardEvent) {
+        function getModifier(init) {
+          for (var
+            out = [],
+            keys = [
+              'ctrlKey',
+              'Control',
+              'shiftKey',
+              'Shift',
+              'altKey',
+              'Alt',
+              'metaKey',
+              'Meta'
+            ],
+            i = 0; i < keys.length; i += 2
+          ) {
+            if (init[keys[i]])
+              out.push(keys[i + 1]);
+          }
+          return out.join(' ');
+        }
+        function KeyboardEvent(type, init) {
+          enoughArguments(arguments.length, 'KeyboardEvent');
+          var out = document.createEvent('KeyboardEvent');
+          if (!init) init = {};
+          out.initKeyboardEvent(
+            type,
+            !!init.bubbles,
+            !!init.cancelable,
+            init.view || window,
+            init.code || '',
+            init.key || '',
+            init.location || 0,
+            getModifier(init),
+            !!init.repeat
+          );
+          return out;
+        }
+        KeyboardEvent.prototype = $KeyboardEvent.prototype;
+        return KeyboardEvent;
+      }(window.KeyboardEvent || function KeyboardEvent() {}))
+    });
+  }
+
+  // window.MouseEvent as constructor
+  try { new MouseEvent('', {}); } catch (o_O) {
+    defineProperty(window, 'MouseEvent', {
+      value: (function ($MouseEvent) {
+        function MouseEvent(type, init) {
+          enoughArguments(arguments.length, 'MouseEvent');
+          var out = document.createEvent('MouseEvent');
+          if (!init) init = {};
+          out.initMouseEvent(
+            type,
+            !!init.bubbles,
+            !!init.cancelable,
+            init.view || window,
+            init.detail || 1,
+            init.screenX || 0,
+            init.screenY || 0,
+            init.clientX || 0,
+            init.clientY || 0,
+            !!init.ctrlKey,
+            !!init.altKey,
+            !!init.shiftKey,
+            !!init.metaKey,
+            init.button || 0,
+            init.relatedTarget || null
+          );
+          return out;
+        }
+        MouseEvent.prototype = $MouseEvent.prototype;
+        return MouseEvent;
+      }(window.MouseEvent || function MouseEvent() {}))
+    });
   }
 
 }(window));
