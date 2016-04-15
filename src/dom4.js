@@ -43,8 +43,17 @@
     TemporaryTokenList,
     wrapVerifyToken,
     document = window.document,
+    hOP = Object.prototype.hasOwnProperty,
     defineProperty = Object.defineProperty || function (object, property, descriptor) {
-      object.__defineGetter__(property, descriptor.get);
+      if (hOP.call(descriptor, 'value')) {
+        object[property] = descriptor.value;
+      } else {
+        if (hOP.call(descriptor, 'get'))
+          object.__defineGetter__(property, descriptor.get);
+        if (hOP.call(descriptor, 'set'))
+          object.__defineSetter__(property, descriptor.set);
+      }
+      return object;
     },
     indexOf = [].indexOf || function indexOf(value){
       var length = this.length;
