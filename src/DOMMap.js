@@ -1,5 +1,5 @@
 // a WeakMap fallback for DOM nodes as key
-var DOMMap = (function () {'use strict';
+var DOMMap = window.WeakMap || (function () {'use strict';
 
   /*! (C) Andrea Giammarchi */
 
@@ -64,41 +64,3 @@ var DOMMap = (function () {'use strict';
   return DOMMap;
 
 }());
-
-/* hint: yes, it's slower
-var dm = new DOMMap();
-var wm = new WeakMap();
-
-console.time('dm has');
-for (var i = 0; i < 1000; i++) {
-  if (!dm.has(document)) dm.set(document, {});
-}
-console.timeEnd('dm has');
-console.time('wm has');
-for (var i = 0; i < 1000; i++) {
-  if (!wm.has(document)) wm.set(document, {});
-}
-console.timeEnd('wm has');
-
-console.time('dm get');
-for (var i = 0; i < 1000; i++) {
-  var obj = dm.get(document) || null;
-}
-console.timeEnd('dm get');
-console.time('wm get');
-for (var i = 0; i < 1000; i++) {
-  var obj = wm.get(document) || null;
-}
-console.timeEnd('wm get');
-
-console.time('dm set');
-for (var i = 0; i < 1000; i++) {
-  dm.set(document, {});
-}
-console.timeEnd('dm set');
-console.time('wm set');
-for (var i = 0; i < 1000; i++) {
-  wm.set(document, {});
-}
-console.timeEnd('wm set');
-// */
