@@ -518,7 +518,7 @@ wru.test([
       var ke = new KeyboardEvent('keypress', {metaKey: true});
       var div = document.createElement('div');
       div.addEventListener('keypress', wru.async(function (e) {
-        wru.assert('info passed through', e.metaKey);
+        wru.assert('info passed through', e.type === 'keypress');
       }));
       setTimeout(function () { div.dispatchEvent(ke); }, 100);
     }
