@@ -533,7 +533,7 @@ THE SOFTWARE.
   }
 
   // window.KeyboardEvent as constructor
-  try { new KeyboardEvent({}); } catch (o_O) {
+  try { new KeyboardEvent('', {}); } catch (o_O) {
     defineProperty(window, 'KeyboardEvent', {
       value: (function ($KeyboardEvent) {
         function getModifier(init) {
