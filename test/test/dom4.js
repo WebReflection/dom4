@@ -31,7 +31,7 @@ wru.test([
       div.addEventListener('test', preventDefault, {passive: true});
       div.dispatchEvent(new CustomEvent('test'));
       div.removeEventListener('test', preventDefault, {passive: true});
-      wru.assert('preventDefault had no effect', false === defaultPrevented);
+      wru.assert('preventDefault had no effect', !defaultPrevented);
     }
   },
   {
@@ -49,7 +49,7 @@ wru.test([
       div.dispatchEvent(new CustomEvent('test'));
       div.dispatchEvent(new CustomEvent('test'));
       wru.assert('invoked only once', 1 === i);
-      wru.assert('preventDefault had no effect', false === defaultPrevented);
+      wru.assert('preventDefault had no effect', !defaultPrevented);
     }
   },
   {
@@ -448,19 +448,14 @@ wru.test([
     name: 'DOMTokenList in SVG',
     test: function () {
       var shape = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-      // actually not clear why some browser exposes the className as object
-      // check only this case
-      if (typeof shape.className !== 'string') {
-        wru.assert('it has className as object', typeof shape.className === 'object');
-        shape.classList.add('a', 'b', 'c');
-        wru.assert('classList works as expected', shape.classList.contains('b'));
-        shape.classList.remove('a', 'b');
-        wru.assert('classList removes values too',
-          !shape.classList.contains('a') &&
-          !shape.classList.contains('b') &&
-          shape.classList.contains('c')
-        );
-      }
+      shape.classList.add('a', 'b', 'c');
+      wru.assert('classList works as expected', shape.classList.contains('b'));
+      shape.classList.remove('a', 'b');
+      wru.assert('classList removes values too',
+        !shape.classList.contains('a') &&
+        !shape.classList.contains('b') &&
+        shape.classList.contains('c')
+      );
     }
   }, {
     name: 'query',
