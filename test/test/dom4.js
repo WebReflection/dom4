@@ -8,6 +8,68 @@ function create(name) {
 
 wru.test([
   {
+    name: 'EventTarget.addEventListener(once)',
+    test: function () {
+      var div = create('div');
+      var i = 0;
+      var increment = function () { i++; };
+      div.addEventListener('test', increment, {once: true});
+      div.dispatchEvent(new CustomEvent('test'));
+      div.dispatchEvent(new CustomEvent('test'));
+      wru.assert('it was actually executed once', i === 1);
+    }
+  },
+  {
+    name: 'EventTarget.addEventListener(passive)',
+    test: function () {
+      var div = create('div');
+      var defaultPrevented;
+      var preventDefault = function (e) {
+        e.preventDefault();
+        defaultPrevented = e.defaultPrevented;
+      };
+      div.addEventListener('test', preventDefault, {passive: true});
+      div.dispatchEvent(new CustomEvent('test'));
+      div.removeEventListener('test', preventDefault, {passive: true});
+      wru.assert('preventDefault had no effect', false === defaultPrevented);
+    }
+  },
+  {
+    name: 'EventTarget.addEventListener(once, passive)',
+    test: function () {
+      var i = 0;
+      var div = create('div');
+      var defaultPrevented;
+      var preventDefault = function (e) {
+        i++;
+        e.preventDefault();
+        defaultPrevented = e.defaultPrevented;
+      };
+      div.addEventListener('test', preventDefault, {once: true, passive: true});
+      div.dispatchEvent(new CustomEvent('test'));
+      div.dispatchEvent(new CustomEvent('test'));
+      wru.assert('invoked only once', 1 === i);
+      wru.assert('preventDefault had no effect', false === defaultPrevented);
+    }
+  },
+  {
+    name: 'EventTarget.addEventListener(capture)',
+    test: function () {
+      var div = create('div');
+      var regularPhase;
+      var objectPhase;
+      var test = function (e) {
+        regularPhase = e.eventPhase;
+      };
+      div.addEventListener('test', test, true);
+      div.removeEventListener('test', test, true);
+      div.addEventListener('test', function (e) {
+        objectPhase = e.eventPhase;
+      }, {once: true, capture: true});
+      wru.assert('it worked', regularPhase === objectPhase);
+    }
+  },
+  {
     name: "prototype has methods",
     test: function () {
       var div = create('div');
