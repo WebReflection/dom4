@@ -519,8 +519,29 @@
     );
   }
 
+  // window.Event as constructor
+  try { new Event('_'); } catch (o_O) {
+    defineProperty(window, 'Event', {
+      value: (function ($Event) {
+        function Event(type, init) {
+          enoughArguments(arguments.length, 'Event');
+          var out = document.createEvent('Event');
+          if (!init) init = {};
+          out.initEvent(
+            type,
+            !!init.bubbles,
+            !!init.cancelable
+          );
+          return out;
+        }
+        Event.prototype = $Event.prototype;
+        return Event;
+      }(window.Event || function Event() {}))
+    });
+  }
+
   // window.KeyboardEvent as constructor
-  try { new KeyboardEvent('', {}); } catch (o_O) {
+  try { new KeyboardEvent('_', {}); } catch (o_O) {
     defineProperty(window, 'KeyboardEvent', {
       value: (function ($KeyboardEvent) {
         // code inspired by https://gist.github.com/termi/4654819
@@ -671,7 +692,7 @@
   }
 
   // window.MouseEvent as constructor
-  try { new MouseEvent('', {}); } catch (o_O) {
+  try { new MouseEvent('_', {}); } catch (o_O) {
     defineProperty(window, 'MouseEvent', {
       value: (function ($MouseEvent) {
         function MouseEvent(type, init) {
