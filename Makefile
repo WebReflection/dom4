@@ -4,7 +4,8 @@
 REPO = dom4
 
 # make var files
-VAR = src/$(REPO).js
+VAR = src/$(REPO).js \
+			src/event-target.js
 
 # make node files
 NODE = $(VAR)
@@ -18,10 +19,10 @@ AMD = $(VAR)
 # default build task
 build:
 	make var
-#	make node
+# make node
 #	make amd
 #	make test
-#	make hint
+	make hint
 	make size
 
 # build generic version

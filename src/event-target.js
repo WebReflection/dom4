@@ -1,9 +1,7 @@
-(function (window){'use strict';
+(function (global){'use strict';
 
-  // a WeakMap fallback for DOM nodes as key
-  var DOMMap = window.WeakMap || (function () {
-
-    /*! (C) Andrea Giammarchi */
+  // a WeakMap fallback for DOM nodes only used as key
+  var DOMMap = global.WeakMap || (function () {
 
     var
       counter = 0,
@@ -62,21 +60,32 @@
 
   }());
 
+  function Dict() {}
+  Dict.prototype = Object.create(null);
+
   // https://dom.spec.whatwg.org/#interface-eventtarget
 
-  function createEventListener(rEL, type, callback, options) {
+  function createEventListener(type, callback, options) {
     function eventListener(e) {
       if (eventListener.once) {
-        rEL.call(e.currentTarget, e.type, eventListener, true);
+        e.currentTarget.removeEventListener(
+          e.type,
+          callback,
+          eventListener
+        );
         eventListener.removed = true;
       }
       if (eventListener.passive) {
         e.preventDefault = createEventListener.preventDefault;
       }
       if (typeof eventListener.callback === 'function') {
+        /* jshint validthis: true */
         eventListener.callback.call(this, e);
       } else if (eventListener.callback) {
         eventListener.callback.handleEvent(e);
+      }
+      if (eventListener.passive) {
+        delete e.preventDefault;
       }
     }
     eventListener.type = type;
@@ -84,24 +93,39 @@
     eventListener.capture = !!options.capture;
     eventListener.passive = !!options.passive;
     eventListener.once = !!options.once;
+    // currently pointless but specs say to use it, so ...
     eventListener.removed = false;
-    return createEventListener;
+    return eventListener;
   }
 
   createEventListener.preventDefault = function preventDefault() {};
 
   var
-    Event = window.CustomEvent || function (type) {
-      var e = document.createEvent('Event');
-      e.initEvent(type, false, false);
-      return e;
-    },
+    Event = global.CustomEvent,
     hOP = Object.prototype.hasOwnProperty,
-    dE = window.dispatchEvent,
-    aEL = window.addEventListener,
-    rEL = window.removeEventListener,
+    dE = global.dispatchEvent,
+    aEL = global.addEventListener,
+    rEL = global.removeEventListener,
     counter = 0,
-    increment = function () { counter++; }
+    increment = function () { counter++; },
+    /*
+    assign = Object.assign || function (target, source) {
+      for (var key in source) {
+        if (hAP.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+      return target;
+    },
+    */
+    getListenerKey = function (options) {
+      return ''.concat(
+        options.capture ? '1' : '0',
+        options.passive ? '1' : '0',
+        options.once ? '1' : '0'
+      );
+    },
+    augment, proto
   ;
 
   try {
@@ -116,10 +140,14 @@
       var dm = new DOMMap();
       function createAEL(aEL) {
         return function addEventListener(type, handler, options) {
-          if (typeof options === 'object') {
-            var info = dm.get(this), i, tmp;
-            if (!info) dm.set(this, (info = {}));
-            if (!hOP.call(info, type)) info[type] = {
+          if (options && typeof options !== 'boolean') {
+            var
+              info = dm.get(this),
+              key = getListenerKey(options),
+              i, tmp, wrap
+            ;
+            if (!info) dm.set(this, (info = new Dict()));
+            if (!(type in info)) info[type] = {
               handler: [],
               wrap: []
             };
@@ -127,8 +155,13 @@
             i = tmp.handler.indexOf(handler);
             if (i < 0) {
               i = tmp.handler.push(handler) - 1;
-              tmp.wrap[i] = createEventListener(rEL, type, handler, options);
-              aEL.call(this, type, tmp.wrap[i], tmp.wrap[i].capture);
+              tmp.wrap[i] = (wrap = new Dict());
+            } else {
+              wrap = tmp.wrap[i];
+            }
+            if (!(key in wrap)) {
+              wrap[key] = createEventListener(type, handler, options);
+              aEL.call(this, type, wrap[key], wrap[key].capture);
             }
           } else {
             aEL.call(this, type, handler, options);
@@ -137,17 +170,30 @@
       }
       function createREL(rEL) {
         return function removeEventListener(type, handler, options) {
-          if (typeof options === 'object') {
-            var info = dm.get(this), i, tmp;
-            if (info && hOP.call(info, type)) {
+          if (options && typeof options !== 'boolean') {
+            var
+              info = dm.get(this),
+              key, i, tmp, wrap
+            ;
+            if (info && (type in info)) {
               tmp = info[type];
               i = tmp.handler.indexOf(handler);
               if (-1 < i) {
-                rEL.call(this, type, tmp.wrap[i], tmp.wrap[i].capture);
-                tmp.handler.splice(i, 1);
-                tmp.wrap.splice(i, 1);
-                if (tmp.handler.length === 0)
-                  delete info[type];
+                key = getListenerKey(options);
+                wrap = tmp.wrap[i];
+                if (key in wrap) {
+                  rEL.call(this, type, wrap[key], wrap[key].capture);
+                  delete wrap[key];
+                  // return if there are other wraps
+                  for (key in wrap) return;
+                  // otherwise remove all the things
+                  tmp.handler.splice(i, 1);
+                  tmp.wrap.splice(i, 1);
+                  // if there are no other handlers
+                  if (tmp.handler.length === 0)
+                    // drop the info[type] entirely
+                    delete info[type];
+                }
               }
             }
           } else {
@@ -156,8 +202,22 @@
         };
       }
 
-      window.addEventListener = createAEL(aEL);
-      window.removeEventListener = createREL(rEL);
+      augment = function (Constructor) {
+        if (!Constructor) return;
+        var proto = Constructor.prototype;
+        proto.addEventListener = createAEL(proto.addEventListener);
+        proto.removeEventListener = createREL(proto.removeEventListener);
+      };
+
+      if (global.EventTarget) {
+        augment(EventTarget);
+      } else {
+        augment(global.Text);
+        augment(global.Element || global.HTMLElement);
+        augment(global.HTMLDocument);
+        augment(global.Window || {prototype:global});
+        augment(global.XMLHttpRequest);
+      }
 
     }());
   }

@@ -2,13 +2,16 @@
 <html>
     <head>
         <title>wru test</title>
-        <!--[if IE 8]><script src="//cdnjs.cloudflare.com/ajax/libs/ie8/0.2.2/ie8.js"></script><![endif]-->
+        <!--[if IE 8]><script src="//cdnjs.cloudflare.com/ajax/libs/ie8/0.4.0/ie8.js"></script><![endif]-->
         <script>
         // here the list of tests to run with wru
-        var TESTS = ["dom4"];
+        var TESTS = [
+          'dom4'
+          //, 'event-target'
+        ];
         </script>
         <script>// don't change code here
-        for(var i = 0; i < TESTS.length; ++i && document.write('<script src="src/' + TESTS + '.js"><' + '/script>'));
+        for(var i = 0; i < TESTS.length; document.write('<script src="build/' + TESTS[i++] + '.js"><' + '/script>'));
         function wru(wru){
           var
             all = [],
