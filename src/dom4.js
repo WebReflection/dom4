@@ -75,9 +75,14 @@
     },
     DOMTokenList = function (node) {
       var
-        className = node.className,
-        isSVG = typeof className === 'object',
-        value = (isSVG ? className.baseVal : className).replace(trim, '')
+        noClassName = typeof node.className === 'undefined',
+        className = noClassName ?
+          (node.getAttribute('class') || '') : node.className,
+        isSVG = noClassName || typeof className === 'object',
+        value = (isSVG ?
+          (noClassName ? className : className.baseVal) :
+          className
+        ).replace(trim, '')
       ;
       if (value.length) {
         properties.push.apply(
@@ -542,186 +547,190 @@
 
   // window.KeyboardEvent as constructor
   try { new KeyboardEvent('_', {}); } catch (o_O) {
-    defineProperty(window, 'KeyboardEvent', {
-      value: (function ($KeyboardEvent) {
-        // code inspired by https://gist.github.com/termi/4654819
-        var
-          initType = 0,
-          defaults = {
-            char: '',
-            key: '',
-            location: 0,
-            ctrlKey: false,
-            shiftKey: false,
-            altKey: false,
-            metaKey: false,
-            altGraphKey: false,
-            repeat: false,
-            locale: navigator.language,
-            detail: 0,
-            bubbles: false,
-            cancelable: false,
-            keyCode: 0,
-            charCode: 0,
-            which: 0
-          },
-          eventType
-        ;
+    /* jshint -W022 */
+    o_O = (function ($KeyboardEvent) {
+      // code inspired by https://gist.github.com/termi/4654819
+      var
+        initType = 0,
+        defaults = {
+          char: '',
+          key: '',
+          location: 0,
+          ctrlKey: false,
+          shiftKey: false,
+          altKey: false,
+          metaKey: false,
+          altGraphKey: false,
+          repeat: false,
+          locale: navigator.language,
+          detail: 0,
+          bubbles: false,
+          cancelable: false,
+          keyCode: 0,
+          charCode: 0,
+          which: 0
+        },
+        eventType
+      ;
+      try {
+        var e = document.createEvent('KeyboardEvent');
+        e.initKeyboardEvent(
+          'keyup', false, false, window, '+', 3,
+          true, false, true, false, false
+        );
+        initType = (
+          (e.keyIdentifier || e.key) == '+' &&
+          (e.keyLocation || e.location) == 3
+        ) && (
+          e.ctrlKey ? e.altKey ? 1 : 3 : e.shiftKey ? 2 : 4
+        ) || 9;
+      } catch(o_O) {}
+      eventType = 0 < initType ? 'KeyboardEvent' : 'Event';
+
+      function getModifier(init) {
+        for (var
+          out = [],
+          keys = [
+            'ctrlKey',
+            'Control',
+            'shiftKey',
+            'Shift',
+            'altKey',
+            'Alt',
+            'metaKey',
+            'Meta',
+            'altGraphKey',
+            'AltGraph'
+          ],
+          i = 0; i < keys.length; i += 2
+        ) {
+          if (init[keys[i]])
+            out.push(keys[i + 1]);
+        }
+        return out.join(' ');
+      }
+
+      function withDefaults(target, source) {
+        for (var key in source) {
+          if (
+            source.hasOwnProperty(key) &&
+            !source.hasOwnProperty.call(target, key)
+          ) target[key] = source[key];
+        }
+        return target;
+      }
+
+      function withInitValues(key, out, init) {
         try {
-          var e = document.createEvent('KeyboardEvent');
-          e.initKeyboardEvent(
-            'keyup', false, false, window, '+', 3,
-            true, false, true, false, false
-          );
-          initType = (
-            (e.keyIdentifier || e.key) == '+' &&
-            (e.keyLocation || e.location) == 3
-          ) && (
-            e.ctrlKey ? e.altKey ? 1 : 3 : e.shiftKey ? 2 : 4
-          ) || 9;
+          out[key] = init[key];
         } catch(o_O) {}
-        eventType = 0 < initType ? 'KeyboardEvent' : 'Event';
+      }
 
-        function getModifier(init) {
-          for (var
-            out = [],
-            keys = [
-              'ctrlKey',
-              'Control',
-              'shiftKey',
-              'Shift',
-              'altKey',
-              'Alt',
-              'metaKey',
-              'Meta',
-              'altGraphKey',
-              'AltGraph'
-            ],
-            i = 0; i < keys.length; i += 2
-          ) {
-            if (init[keys[i]])
-              out.push(keys[i + 1]);
+      function KeyboardEvent(type, init) {
+        enoughArguments(arguments.length, 'KeyboardEvent');
+        init = withDefaults(init || {}, defaults);
+        var
+          out = document.createEvent(eventType),
+          ctrlKey = init.ctrlKey,
+          shiftKey = init.shiftKey,
+          altKey = init.altKey,
+          metaKey = init.metaKey,
+          altGraphKey = init.altGraphKey,
+          modifiers = initType > 3 ? getModifier(init) : null,
+          key = String(init.key),
+          chr = String(init.char),
+          location = init.location,
+          keyCode = init.keyCode || (
+            (init.keyCode = key) &&
+            key.charCodeAt(0)
+          ) || 0,
+          charCode = init.charCode || (
+            (init.charCode = chr) &&
+            chr.charCodeAt(0)
+          ) || 0,
+          bubbles = init.bubbles,
+          cancelable = init.cancelable,
+          repeat = init.repeat,
+          locale = init.locale,
+          view = init.view || window,
+          args
+        ;
+        if (!init.which) init.which = init.keyCode;
+        if ('initKeyEvent' in out) {
+          out.initKeyEvent(
+            type, bubbles, cancelable, view,
+            ctrlKey, altKey, shiftKey, metaKey, keyCode, charCode
+          );
+        } else if (0 < initType && 'initKeyboardEvent' in out) {
+          args = [type, bubbles, cancelable, view];
+          switch (initType) {
+            case 1:
+              args.push(key, location, ctrlKey, shiftKey, altKey, metaKey, altGraphKey);
+              break;
+            case 2:
+              args.push(ctrlKey, altKey, shiftKey, metaKey, keyCode, charCode);
+              break;
+            case 3:
+              args.push(key, location, ctrlKey, altKey, shiftKey, metaKey, altGraphKey);
+              break;
+            case 4:
+              args.push(key, location, modifiers, repeat, locale);
+              break;
+            default:
+              args.push(char, key, location, modifiers, repeat, locale);
           }
-          return out.join(' ');
+          out.initKeyboardEvent.apply(out, args);
+        } else {
+          out.initEvent(type, bubbles, cancelable);
         }
-
-        function withDefaults(target, source) {
-          for (var key in source) {
-            if (
-              source.hasOwnProperty(key) &&
-              !source.hasOwnProperty.call(target, key)
-            ) target[key] = source[key];
+        for (key in out) {
+          if (defaults.hasOwnProperty(key) && out[key] !== init[key]) {
+            withInitValues(key, out, init);
           }
-          return target;
         }
-
-        function withInitValues(key, out, init) {
-          try {
-            out[key] = init[key];
-          } catch(o_O) {}
-        }
-
-        function KeyboardEvent(type, init) {
-          enoughArguments(arguments.length, 'KeyboardEvent');
-          init = withDefaults(init || {}, defaults);
-          var
-            out = document.createEvent(eventType),
-            ctrlKey = init.ctrlKey,
-            shiftKey = init.shiftKey,
-            altKey = init.altKey,
-            metaKey = init.metaKey,
-            altGraphKey = init.altGraphKey,
-            modifiers = initType > 3 ? getModifier(init) : null,
-            key = String(init.key),
-            chr = String(init.char),
-            location = init.location,
-            keyCode = init.keyCode || (
-              (init.keyCode = key) &&
-              key.charCodeAt(0)
-            ) || 0,
-            charCode = init.charCode || (
-              (init.charCode = chr) &&
-              chr.charCodeAt(0)
-            ) || 0,
-            bubbles = init.bubbles,
-            cancelable = init.cancelable,
-            repeat = init.repeat,
-            locale = init.locale,
-            view = init.view || window,
-            args
-          ;
-          if (!init.which) init.which = init.keyCode;
-          if ('initKeyEvent' in out) {
-            out.initKeyEvent(
-              type, bubbles, cancelable, view,
-              ctrlKey, altKey, shiftKey, metaKey, keyCode, charCode
-            );
-          } else if (0 < initType && 'initKeyboardEvent' in out) {
-            args = [type, bubbles, cancelable, view];
-            switch (initType) {
-              case 1:
-                args.push(key, location, ctrlKey, shiftKey, altKey, metaKey, altGraphKey);
-                break;
-              case 2:
-                args.push(ctrlKey, altKey, shiftKey, metaKey, keyCode, charCode);
-                break;
-              case 3:
-                args.push(key, location, ctrlKey, altKey, shiftKey, metaKey, altGraphKey);
-                break;
-              case 4:
-                args.push(key, location, modifiers, repeat, locale);
-                break;
-              default:
-                args.push(char, key, location, modifiers, repeat, locale);
-            }
-            out.initKeyboardEvent.apply(out, args);
-          } else {
-            out.initEvent(type, bubbles, cancelable);
-          }
-          for (key in out) {
-            if (defaults.hasOwnProperty(key) && out[key] !== init[key]) {
-              withInitValues(key, out, init);
-            }
-          }
-          return out;
-        }
-        KeyboardEvent.prototype = $KeyboardEvent.prototype;
-        return KeyboardEvent;
-      }(window.KeyboardEvent || function KeyboardEvent() {}))
-    });
+        return out;
+      }
+      KeyboardEvent.prototype = $KeyboardEvent.prototype;
+      return KeyboardEvent;
+    }(window.KeyboardEvent || function KeyboardEvent() {}));
+    defineProperty(window, 'KeyboardEvent', {value: o_O});
+    // Android 4 gotcha
+    if (KeyboardEvent !== o_O) KeyboardEvent = o_O;
   }
 
   // window.MouseEvent as constructor
   try { new MouseEvent('_', {}); } catch (o_O) {
-    defineProperty(window, 'MouseEvent', {
-      value: (function ($MouseEvent) {
-        function MouseEvent(type, init) {
-          enoughArguments(arguments.length, 'MouseEvent');
-          var out = document.createEvent('MouseEvent');
-          if (!init) init = {};
-          out.initMouseEvent(
-            type,
-            !!init.bubbles,
-            !!init.cancelable,
-            init.view || window,
-            init.detail || 1,
-            init.screenX || 0,
-            init.screenY || 0,
-            init.clientX || 0,
-            init.clientY || 0,
-            !!init.ctrlKey,
-            !!init.altKey,
-            !!init.shiftKey,
-            !!init.metaKey,
-            init.button || 0,
-            init.relatedTarget || null
-          );
-          return out;
-        }
-        MouseEvent.prototype = $MouseEvent.prototype;
-        return MouseEvent;
-      }(window.MouseEvent || function MouseEvent() {}))
-    });
+    /* jshint -W022 */
+    o_O = (function ($MouseEvent) {
+      function MouseEvent(type, init) {
+        enoughArguments(arguments.length, 'MouseEvent');
+        var out = document.createEvent('MouseEvent');
+        if (!init) init = {};
+        out.initMouseEvent(
+          type,
+          !!init.bubbles,
+          !!init.cancelable,
+          init.view || window,
+          init.detail || 1,
+          init.screenX || 0,
+          init.screenY || 0,
+          init.clientX || 0,
+          init.clientY || 0,
+          !!init.ctrlKey,
+          !!init.altKey,
+          !!init.shiftKey,
+          !!init.metaKey,
+          init.button || 0,
+          init.relatedTarget || null
+        );
+        return out;
+      }
+      MouseEvent.prototype = $MouseEvent.prototype;
+      return MouseEvent;
+    }(window.MouseEvent || function MouseEvent() {}));
+    defineProperty(window, 'MouseEvent', {value: o_O});
+    // Android 4 gotcha
+    if (MouseEvent !== o_O) MouseEvent = o_O;
   }
 
 }(window));

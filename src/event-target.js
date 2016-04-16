@@ -61,7 +61,7 @@
   }());
 
   function Dict() {}
-  Dict.prototype = Object.create(null);
+  Dict.prototype = (Object.create || Object)(null);
 
   // https://dom.spec.whatwg.org/#interface-eventtarget
 
@@ -108,16 +108,15 @@
     rEL = global.removeEventListener,
     counter = 0,
     increment = function () { counter++; },
-    /*
-    assign = Object.assign || function (target, source) {
-      for (var key in source) {
-        if (hAP.call(source, key)) {
-          target[key] = source[key];
+    indexOf = [].indexOf || function indexOf(value){
+      var length = this.length;
+      while(length--) {
+        if (this[length] === value) {
+          break;
         }
       }
-      return target;
+      return length;
     },
-    */
     getListenerKey = function (options) {
       return ''.concat(
         options.capture ? '1' : '0',
@@ -152,7 +151,7 @@
               wrap: []
             };
             tmp = info[type];
-            i = tmp.handler.indexOf(handler);
+            i = indexOf.call(tmp.handler, handler);
             if (i < 0) {
               i = tmp.handler.push(handler) - 1;
               tmp.wrap[i] = (wrap = new Dict());
@@ -177,7 +176,7 @@
             ;
             if (info && (type in info)) {
               tmp = info[type];
-              i = tmp.handler.indexOf(handler);
+              i = indexOf.call(tmp.handler, handler);
               if (-1 < i) {
                 key = getListenerKey(options);
                 wrap = tmp.wrap[i];
