@@ -548,23 +548,25 @@ THE SOFTWARE.
 
   // window.Event as constructor
   try { new Event('_'); } catch (o_O) {
-    defineProperty(window, 'Event', {
-      value: (function ($Event) {
-        function Event(type, init) {
-          enoughArguments(arguments.length, 'Event');
-          var out = document.createEvent('Event');
-          if (!init) init = {};
-          out.initEvent(
-            type,
-            !!init.bubbles,
-            !!init.cancelable
-          );
-          return out;
-        }
-        Event.prototype = $Event.prototype;
-        return Event;
-      }(window.Event || function Event() {}))
-    });
+    /* jshint -W022 */
+    o_O = (function ($Event) {
+      function Event(type, init) {
+        enoughArguments(arguments.length, 'Event');
+        var out = document.createEvent('Event');
+        if (!init) init = {};
+        out.initEvent(
+          type,
+          !!init.bubbles,
+          !!init.cancelable
+        );
+        return out;
+      }
+      Event.prototype = $Event.prototype;
+      return Event;
+    }(window.Event || function Event() {}));
+    defineProperty(window, 'Event', {value: o_O});
+    // Android 4 gotcha
+    if (Event !== o_O) Event = o_O;
   }
 
   // window.KeyboardEvent as constructor
