@@ -24,7 +24,7 @@ And for [new DOM Level 4 childNode entries](https://dom.spec.whatwg.org/#childno
   * Element#replaceWith() ( **warning** Element#replace() has been recently deprecated )
   * Element#remove()
 
-The [implemented test](test/dom4.js) is conform to current specifications.
+The [implemented test](https://github.com/WebReflection/dom4/blob/master/test/dom4.js) is conform to current specifications.
 
 Other fixes/standardized behaviors include:
 
