@@ -76,4 +76,4 @@ If you found a bug, want to contribute or have any questions feel free to fill a
 
 
 ## License
- *Dom4* Code released under the MIT license.
+ [Dom4](https://github.com/WebReflection/dom4) Code released under the MIT license.
