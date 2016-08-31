@@ -3,7 +3,9 @@ DOM4
 
 [![build status](https://travis-ci.org/WebReflection/dom4.svg)](https://travis-ci.org/WebReflection/dom4)
 
-#### Via cdnJS
+A fully tested and covered polyfill for new DOM Level 4 entries
+
+## Via cdnJS
 Many thanks to [cdnjs](http://www.cdnjs.com) for hosting this script. Following an example on how to include it.
 ```html
 <script
@@ -11,7 +13,8 @@ Many thanks to [cdnjs](http://www.cdnjs.com) for hosting this script. Following 
 >/* DOM4 */</script>
 ```
 
-#### Features
+
+## Features
 This is a [fully tested](http://webreflection.github.io/dom4/test/) and covered polyfill for both [new DOM Level 4 parentNode entries](https://dom.spec.whatwg.org/#parentnode):
 
   * Element#prepend()
@@ -39,11 +42,11 @@ Other fixes/standardized behaviors include:
   * [Node#contains](https://dom.spec.whatwg.org/#dom-node-contains) utility to know if another node is inside the current one
   * `requestAnimationFrame` and `cancelAnimationFrame` are polyfilled too but the least legacy fallback to setTimeout does not support accurate timing and doesn't slow down execution with that logic. Feel free to load upfront other polyfills if needed.
 
-The **DOM4** license is Mit Style.
 
-If you need other polyfills too [have a look at another DOM-shim repo](https://github.com/Raynos/DOM-shim).
+If you need other polyfills too, [have a look at another DOM-shim repo](https://github.com/Raynos/DOM-shim).
 
-### Compatibility
+
+## Compatibility
 Theoretically compatible with all browsers you know that are truly used these days, here a list:
 
   * Android 2.1+
@@ -63,5 +66,14 @@ It's way easier if you tell me which browser in a current relevant market share 
 
 For **IE8** only it's recommended to include [ie8](https://github.com/WebReflection/ie8#ie8) script before `dom4` or `CustomEvent`, `addEventListener`, and `dispatchEvent` won't work as expected.
 
-### Which File
+
+## Which File
 The [minified version is here](https://github.com/WebReflection/dom4/blob/master/build/dom4.js), while the [max one here](https://github.com/WebReflection/dom4/blob/master/build/dom4.max.js). If you want to test directly [try this page](http://webreflection.github.com/dom4/test/), it should be green.
+
+
+## Want to contribute?
+If you found a bug, want to contribute or have any questions feel free to fill an [issue](https://github.com/WebReflection/dom4/issues) or pull request, and help us to improve the [Dom4](https://github.com/WebReflection/dom4)
+
+
+## License
+ [Dom4](https://github.com/WebReflection/dom4) Code released under the MIT license.
