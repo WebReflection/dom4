@@ -2,6 +2,7 @@ DOM4
 ====
 
 [![build status](https://travis-ci.org/WebReflection/dom4.svg)](https://travis-ci.org/WebReflection/dom4)
+A fully tested and covered polyfill for new DOM Level 4 entries
 
 ## Via cdnJS
 Many thanks to [cdnjs](http://www.cdnjs.com) for hosting this script. Following an example on how to include it.
