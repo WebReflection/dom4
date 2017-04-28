@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
-/* jshint esversion: 3, undef: true */
+/* jshint undef: true */
 /* globals KeyboardEvent: true */
 (function(window){'use strict';
   /* jshint loopfunc: true, noempty: false*/
@@ -760,7 +760,7 @@ THE SOFTWARE.
   }
 
 }(window));
-/* jshint esversion: 3, undef: true */
+/* jshint undef: true */
 /* globals self:false, EventTarget: false */
 (function (global){'use strict';
 

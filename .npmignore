@@ -7,4 +7,5 @@ build/*.amd.js
 Makefile
 index.html
 bower.json
+.jshintrc
 >README.md.*
