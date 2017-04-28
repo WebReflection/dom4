@@ -1,6 +1,5 @@
 // a WeakMap fallback for DOM nodes as key
 var DOMMap = window.WeakMap || (function () {'use strict';
-
   /*! (C) Andrea Giammarchi */
 
   var

@@ -1,3 +1,5 @@
+/* jshint undef: true */
+/* globals self:false, EventTarget: false */
 (function (global){'use strict';
 
   // a WeakMap fallback for DOM nodes only used as key
