@@ -53,7 +53,7 @@
         dispatch(key, this.__ce__, true);
         key.addEventListener(this.__ce__.type, new Handler(value), false);
         return this;
-      },
+      }
     };
 
     return DOMMap;
