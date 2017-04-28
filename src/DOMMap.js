@@ -1,6 +1,5 @@
 // a WeakMap fallback for DOM nodes as key
 var DOMMap = window.WeakMap || (function () {'use strict';
-
   /*! (C) Andrea Giammarchi */
 
   var
@@ -58,7 +57,7 @@ var DOMMap = window.WeakMap || (function () {'use strict';
       dispatch(key, this.__ce__, true);
       key.addEventListener(this.__ce__.type, new Handler(value), false);
       return this;
-    },
+    }
   };
 
   return DOMMap;

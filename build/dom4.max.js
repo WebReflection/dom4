@@ -20,6 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
+/* jshint undef: true */
+/* globals KeyboardEvent: true */
 (function(window){'use strict';
   /* jshint loopfunc: true, noempty: false*/
   // http://www.w3.org/TR/dom/#element
@@ -566,7 +568,7 @@ THE SOFTWARE.
     }(window.Event || function Event() {}));
     defineProperty(window, 'Event', {value: o_O});
     // Android 4 gotcha
-    if (Event !== o_O) Event = o_O;
+    if (Event !== o_O) Event = o_O; // jshint ignore:line
   }
 
   // window.KeyboardEvent as constructor
@@ -577,7 +579,7 @@ THE SOFTWARE.
       var
         initType = 0,
         defaults = {
-          char: '',
+          "char": '',
           key: '',
           location: 0,
           ctrlKey: false,
@@ -662,7 +664,7 @@ THE SOFTWARE.
           altGraphKey = init.altGraphKey,
           modifiers = initType > 3 ? getModifier(init) : null,
           key = String(init.key),
-          chr = String(init.char),
+          chr = String(init["char"]),
           location = init.location,
           keyCode = init.keyCode || (
             (init.keyCode = key) &&
@@ -754,10 +756,13 @@ THE SOFTWARE.
     }(window.MouseEvent || function MouseEvent() {}));
     defineProperty(window, 'MouseEvent', {value: o_O});
     // Android 4 gotcha
-    if (MouseEvent !== o_O) MouseEvent = o_O;
+    if (MouseEvent !== o_O) MouseEvent = o_O; // jshint ignore: line
   }
 
-}(window));(function (global){'use strict';
+}(window));
+/* jshint undef: true */
+/* globals self:false, EventTarget: false */
+(function (global){'use strict';
 
   // a WeakMap fallback for DOM nodes only used as key
   var DOMMap = global.WeakMap || (function () {
@@ -812,7 +817,7 @@ THE SOFTWARE.
         dispatch(key, this.__ce__, true);
         key.addEventListener(this.__ce__.type, new Handler(value), false);
         return this;
-      },
+      }
     };
 
     return DOMMap;

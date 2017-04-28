@@ -1,3 +1,5 @@
+/* jshint undef: true */
+/* globals self:false, EventTarget: false */
 (function (global){'use strict';
 
   // a WeakMap fallback for DOM nodes only used as key
@@ -53,7 +55,7 @@
         dispatch(key, this.__ce__, true);
         key.addEventListener(this.__ce__.type, new Handler(value), false);
         return this;
-      },
+      }
     };
 
     return DOMMap;

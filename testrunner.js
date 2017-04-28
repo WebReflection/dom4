@@ -1,3 +1,4 @@
+/* jshint devel: true, node: true, phantom: true */
 var url = 'index.html';
 var page = require('webpage').create();
 console.log('Loading: ' + url);

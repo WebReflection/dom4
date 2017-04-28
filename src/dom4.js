@@ -1,3 +1,5 @@
+/* jshint undef: true */
+/* globals KeyboardEvent: true */
 (function(window){'use strict';
   /* jshint loopfunc: true, noempty: false*/
   // http://www.w3.org/TR/dom/#element
@@ -544,7 +546,7 @@
     }(window.Event || function Event() {}));
     defineProperty(window, 'Event', {value: o_O});
     // Android 4 gotcha
-    if (Event !== o_O) Event = o_O;
+    if (Event !== o_O) Event = o_O; // jshint ignore:line
   }
 
   // window.KeyboardEvent as constructor
@@ -555,7 +557,7 @@
       var
         initType = 0,
         defaults = {
-          char: '',
+          "char": '',
           key: '',
           location: 0,
           ctrlKey: false,
@@ -640,7 +642,7 @@
           altGraphKey = init.altGraphKey,
           modifiers = initType > 3 ? getModifier(init) : null,
           key = String(init.key),
-          chr = String(init.char),
+          chr = String(init["char"]),
           location = init.location,
           keyCode = init.keyCode || (
             (init.keyCode = key) &&
@@ -732,7 +734,7 @@
     }(window.MouseEvent || function MouseEvent() {}));
     defineProperty(window, 'MouseEvent', {value: o_O});
     // Android 4 gotcha
-    if (MouseEvent !== o_O) MouseEvent = o_O;
+    if (MouseEvent !== o_O) MouseEvent = o_O; // jshint ignore: line
   }
 
 }(window));
