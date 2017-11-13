@@ -98,7 +98,9 @@
     return eventListener;
   }
 
-  createEventListener.preventDefault = function preventDefault() {};
+  createEventListener.preventDefault = function preventDefault() {
+    console.warn('Ignored attempt to preventDefault an event from a passive listener');
+  };
 
   var
     Event = global.CustomEvent,
