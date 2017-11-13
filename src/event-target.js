@@ -102,7 +102,6 @@
 
   var
     Event = global.CustomEvent,
-    hOP = Object.prototype.hasOwnProperty,
     dE = global.dispatchEvent,
     aEL = global.addEventListener,
     rEL = global.removeEventListener,
@@ -124,7 +123,7 @@
         options.once ? '1' : '0'
       );
     },
-    augment, proto
+    augment
   ;
 
   try {
