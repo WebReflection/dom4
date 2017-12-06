@@ -32,10 +32,10 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "wru": "~0.2.x",
-    "uglify-js": "1.x",
     "jshint": "~2.x",
+    "phantomjs": "~1.x",
     "tiny-cdn": "*",
-    "phantomjs": "~1.x"
+    "uglify-js": "^2.8.29",
+    "wru": "~0.2.x"
   }
 }
