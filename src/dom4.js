@@ -99,7 +99,6 @@
       },
       set: function(){}
     },
-    uid = 'dom4-tmp-'.concat(Math.random() * +new Date()).replace('.','-'),
     trim = /^\s+|\s+$/g,
     spaces = /\s+/,
     SPACE = '\x20',
@@ -126,50 +125,7 @@
     ElementPrototype = (window.Element || Node || window.HTMLElement).prototype,
     HTMLSelectElement = window.HTMLSelectElement || createElement('select').constructor,
     selectRemove = HTMLSelectElement.prototype.remove,
-    ShadowRoot = window.ShadowRoot,
     SVGElement = window.SVGElement,
-    // normalizes multiple ids as CSS query
-    idSpaceFinder = / /g,
-    idSpaceReplacer = '\\ ',
-    createQueryMethod = function (methodName) {
-      var createArray = methodName === 'querySelectorAll';
-      return function (css) {
-        var a, i, id, query, nl, selectors, node = this.parentNode;
-        if (node) {
-          for (
-            id = this.getAttribute('id') || uid,
-            query = id === uid ? id : id.replace(idSpaceFinder, idSpaceReplacer),
-            selectors = css.split(','),
-            i = 0; i < selectors.length; i++
-          ) {
-            selectors[i] = '#' + query + ' ' + selectors[i];
-          }
-          css = selectors.join(',');
-        }
-        if (id === uid) this.setAttribute('id', id);
-        nl = (node || this)[methodName](css);
-        if (id === uid) this.removeAttribute('id');
-        // return a list
-        if (createArray) {
-          i = nl.length;
-          a = new Array(i);
-          while (i--) a[i] = nl[i];
-        }
-        // return node or null
-        else {
-          a = nl;
-        }
-        return a;
-      };
-    },
-    addQueryAndAll = function (where) {
-      if (!('query' in where)) {
-        where.query = ElementPrototype.query;
-      }
-      if (!('queryAll' in where)) {
-        where.queryAll = ElementPrototype.queryAll;
-      }
-    },
     properties = [
       'matches', (
         ElementPrototype.matchesSelector ||
@@ -247,9 +203,7 @@
         if (parentNode) {
           parentNode.removeChild(this);
         }
-      },
-      'query', createQueryMethod('querySelector'),
-      'queryAll', createQueryMethod('querySelectorAll')
+      }
     ],
     slice = properties.slice,
     i = properties.length; i; i -= 2
@@ -287,23 +241,6 @@
         } catch(o_O) {}
       }
     }
-  }
-
-  // bring query and queryAll to the document too
-  addQueryAndAll(document);
-
-  // brings query and queryAll to fragments as well
-  if (DocumentFragmentPrototype) {
-    addQueryAndAll(DocumentFragmentPrototype);
-  } else {
-    try {
-      addQueryAndAll(createDocumentFragment().constructor.prototype);
-    } catch(o_O) {}
-  }
-
-  // bring query and queryAll to the ShadowRoot too
-  if (ShadowRoot) {
-    addQueryAndAll(ShadowRoot.prototype);
   }
 
   // most likely an IE9 only issue
@@ -735,4 +672,56 @@
     if (MouseEvent !== o_O) MouseEvent = o_O;
   }
 
+  if (!document.querySelectorAll('*').forEach) {
+    (function () {
+      function patch(what) {
+        var querySelectorAll = what.querySelectorAll;
+        what.querySelectorAll = function qSA(css) {
+          var result = querySelectorAll.call(this, css);
+          result.forEach = Array.prototype.forEach;
+          return result;
+        };
+      }
+      patch(document);
+      patch(HTMLElement.prototype);
+    }());
+  }
+
+  try {
+    // https://drafts.csswg.org/selectors-4/#the-scope-pseudo
+    document.querySelector(':scope *');
+  } catch(o_O) {
+    (function () {
+      var counter = 0;
+      var parent = createElement('div');
+      var prefix = 'scope-' + (Math.random() * 1e9 >>> 0) + '-';
+      var proto = HTMLElement.prototype;
+      var querySelector = proto.querySelector;
+      var querySelectorAll = proto.querySelectorAll;
+      proto.querySelector = function qS(css) {
+        return find(this, querySelector, css);
+      };
+      proto.querySelectorAll = function qSA(css) {
+        return find(this, querySelectorAll, css);
+      };
+      function find(node, method, css) {
+        var oldID = node.id;
+        var noParent = !node.parentNode;
+        node.id = oldID || (prefix + counter++);
+        if (noParent) parent.appendChild(node);
+        var result = method.call(
+          node.parentNode,
+          css.replace(
+            /(^|,\s*)(:scope([ >]|$))?/g,
+            function ($0, $1, $2, $3) {
+              return $1 + '#' + node.id + ($3 || ' ');
+            }
+          )
+        );
+        if (noParent) parent.removeChild(node);
+        node.id = oldID;
+        return result;
+      }
+    }());
+  }
 }(window));

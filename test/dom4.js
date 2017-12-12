@@ -458,44 +458,6 @@ wru.test([
       );
     }
   }, {
-    name: 'query',
-    test: function () {
-      var div = document.body.appendChild(document.createElement('div'));
-      div.innerHTML = '<ul><li></li><li></li></ul>';
-      wru.assert('find just one node', div.query('li') === div.querySelector('li'));
-      wru.assert('on document too', document.query('body') === document.body);
-      wru.assert('while querySelector returns absolute nodes', div.querySelector('body ul') === div.firstChild);
-      wru.assert('query returns only relative', div.query('body ul') === null);
-      div.remove();
-    }
-  }, {
-    name: 'queryAll',
-    test: function () {
-      var div = document.createElement('div');
-      div.innerHTML = '<ul><li></li><li></li></ul>';
-      var li = div.queryAll('li');
-      var oldWay = div.querySelectorAll('li');
-      wru.assert('find all of them',
-        li[0] === oldWay[0] &&
-        li[1] === oldWay[1]
-      );
-      wru.assert('is an instanceof Array', li instanceof Array);
-      wru.assert('on document too', document.queryAll('body') instanceof Array);
-      wru.assert('and it has the right length', document.queryAll('body').length === 1);
-      wru.assert('and contains the right element', document.queryAll('body')[0] === document.body);
-      document.body.appendChild(div);
-      wru.assert('while querySelectorAll returns absolute nodes', div.querySelectorAll('body ul')[0] === div.firstChild);
-      wru.assert('queryAll returns only relative', div.queryAll('body ul').length === 0);
-      div.remove();
-    }
-  }, {
-    name: 'DocumentFragment query/queryAll',
-    test: function () {
-      var df = document.createDocumentFragment();
-      wru.assert('DocumentFragment#query', df.query);
-      wru.assert('DocumentFragment#queryAll', df.queryAll);
-    }
-  }, {
     name: 'requestAnimationFrame',
     test: function () {
       requestAnimationFrame(wru.async(function () {
@@ -589,15 +551,21 @@ wru.test([
       }));
       setTimeout(function () { div.dispatchEvent(ke); }, 100);
     }
-  }
-].concat(
-  typeof ShadowRoot === 'function' ?
-  [{
-    name: 'ShadowRoot query/queryAll',
+  }, {
+    name: ':scope',
     test: function () {
-      wru.assert('ShadowRoot#query', ShadowRoot.prototype.query);
-      wru.assert('ShadowRoot#queryAll', ShadowRoot.prototype.queryAll);
+      var parent = document.createElement('div');
+      parent.innerHTML = '<div><h1>h1</h1></div><div><p>p</p><h1>h1</h1><b>b</b><ul><li>li</li></ul></div><h1>h1</h1>';
+      var div = parent.childNodes[1];
+      var result = div.querySelectorAll(':scope > p, :scope li, h1');
+      wru.assert('correct length', result.length === 3);
+      wru.assert('correct results',
+        result[0] === div.childNodes[0] &&
+        (
+          (result[1] === div.childNodes[3].childNodes[0] && result[2] === div.childNodes[1]) ||
+          (result[2] === div.childNodes[3].childNodes[0] && result[1] === div.childNodes[1])
+        )
+      );
     }
-  }] :
-  []
-));
+  }
+]);
