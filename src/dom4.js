@@ -683,7 +683,7 @@
         };
       }
       patch(document);
-      patch(HTMLElement.prototype);
+      patch(Element.prototype);
     }());
   }
 
@@ -692,10 +692,8 @@
     document.querySelector(':scope *');
   } catch(o_O) {
     (function () {
-      var counter = 0;
-      var parent = createElement('div');
-      var prefix = 'scope-' + (Math.random() * 1e9 >>> 0) + '-';
-      var proto = HTMLElement.prototype;
+      var dataScope = 'data-scope-' + (Math.random() * 1e9 >>> 0);
+      var proto = Element.prototype;
       var querySelector = proto.querySelector;
       var querySelectorAll = proto.querySelectorAll;
       proto.querySelector = function qS(css) {
@@ -705,21 +703,17 @@
         return find(this, querySelectorAll, css);
       };
       function find(node, method, css) {
-        var oldID = node.id;
-        var noParent = !node.parentNode;
-        node.id = oldID || (prefix + counter++);
-        if (noParent) parent.appendChild(node);
+        node.setAttribute(dataScope, null);
         var result = method.call(
-          node.parentNode,
+          node,
           css.replace(
-            /(^|,\s*)(:scope([ >]|$))?/g,
+            /(^|,\s*)(:scope([ >]|$))/g,
             function ($0, $1, $2, $3) {
-              return $1 + '#' + node.id + ($3 || ' ');
+              return $1 + '[' + dataScope + ']' + ($3 || ' ');
             }
           )
         );
-        if (noParent) parent.removeChild(node);
-        node.id = oldID;
+        node.removeAttribute(dataScope);
         return result;
       }
     }());
