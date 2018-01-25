@@ -554,17 +554,22 @@ wru.test([
   }, {
     name: ':scope',
     test: function () {
+      function findInResult(result, element) {
+        for (var i = 0; i < result.length; i++) {
+          if (result[i] === element) return true;
+        }
+        return false;
+      }
       var parent = document.createElement('div');
       parent.innerHTML = '<div><h1>h1</h1></div><div><p>p</p><h1>h1</h1><b>b</b><ul><li>li</li></ul></div><h1>h1</h1>';
       var div = parent.childNodes[1];
-      var result = div.querySelectorAll(':scope > p, :scope li, h1');
-      wru.assert('correct length', result.length === 3);
+      var result = div.querySelectorAll(':scope > p, :scope li, h1, div > b');
+      wru.assert('correct length', result.length === 4);
       wru.assert('correct results',
-        result[0] === div.childNodes[0] &&
-        (
-          (result[1] === div.childNodes[3].childNodes[0] && result[2] === div.childNodes[1]) ||
-          (result[2] === div.childNodes[3].childNodes[0] && result[1] === div.childNodes[1])
-        )
+        findInResult(result, div.childNodes[0]) &&
+        findInResult(result, div.childNodes[1]) &&
+        findInResult(result, div.childNodes[2]) &&
+        findInResult(result, div.childNodes[3].childNodes[0])
       );
     }
   }
