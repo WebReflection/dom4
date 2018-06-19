@@ -9,3 +9,7 @@ index.html
 bower.json
 >README.md.*
 package-lock.json
+.travis.yml
+testrunner.js
+template/license.after
+template/license.before
