@@ -8,3 +8,4 @@ Makefile
 index.html
 bower.json
 >README.md.*
+package-lock.json

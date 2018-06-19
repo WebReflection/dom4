@@ -231,6 +231,46 @@ wru.test([
       );
     }
   }, {
+    name: 'toggleAttribute',
+    test: function () {
+      var button = create('button');
+      button.toggleAttribute('disabled');
+      wru.assert(
+        'toggle makes button disabled',
+        button.disabled
+      );
+      button.toggleAttribute('disabled');
+      wru.assert(
+        'toggle enables button again',
+        !button.disabled
+      );
+      button.toggleAttribute('disabled', false);
+      wru.assert(
+        'toggle forced to false does nothing',
+        !button.disabled
+      );
+      button.toggleAttribute('disabled');
+      wru.assert(
+        'toggle re-makes button disabled',
+        button.disabled
+      );
+      button.toggleAttribute('disabled', true);
+      wru.assert(
+        'toggle forced to true does nothing',
+        button.disabled
+      );
+      button.toggleAttribute('disabled', false);
+      wru.assert(
+        'toggle forced to false while true enable the button',
+        !button.disabled
+      );
+      button.toggleAttribute('disabled', true);
+      wru.assert(
+        'toggle forced to true when false disables the button',
+        button.disabled
+      );
+    }
+  }, {
     name: 'DOMTokenList',
     test: function () {
       wru.assert('it exists', create('div').classList);

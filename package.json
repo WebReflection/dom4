@@ -27,15 +27,15 @@
     }
   ],
   "scripts": {
-    "test": "phantomjs testrunner.js",
+    "test": "node testrunner.js",
     "web": "node node_modules/tiny-cdn/tiny-cdn run -p=1337"
   },
   "dependencies": {},
   "devDependencies": {
-    "jshint": "~2.x",
-    "phantomjs": "~1.x",
-    "tiny-cdn": "*",
+    "jshint": "^2.9.5",
+    "nightmare": "^3.0.1",
+    "tiny-cdn": "^0.7.0",
     "uglify-js": "^2.8.29",
-    "wru": "~0.2.x"
+    "wru": "^0.3.0"
   }
 }

@@ -185,6 +185,19 @@
           }
         }
       },
+      'toggleAttribute', function toggleAttribute(name, force) {
+        var had = this.hasAttribute(name);
+        if (1 < arguments.length) {
+          if (had && !force)
+            this.removeAttribute(name);
+          else if (force && !had)
+            this.setAttribute(name, "");
+        }
+        else if (had)
+          this.removeAttribute(name);
+        else
+          this.setAttribute(name, "");
+      },
       // WARNING - DEPRECATED - use .replaceWith() instead
       'replace', function replace() {
         this.replaceWith.apply(this, arguments);

@@ -99,8 +99,4 @@ pages:
 dependencies:
 	rm -rf node_modules
 	mkdir node_modules
-	npm install wru
-	npm install tiny-cdn
-	npm install uglify-js@1
-	npm install jshint
-	npm install markdown
+	npm install
