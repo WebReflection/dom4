@@ -35,6 +35,7 @@ The [implemented test](https://github.com/WebReflection/dom4/blob/master/test/do
 
 Other fixes/standardized behaviors include:
 
+  * [toggleAttribute](https://dom.spec.whatwg.org/#dom-element-toggleattribute)
   * [DOM Listener: capture, passive, and once](https://www.webreflection.co.uk/blog/2016/04/17/new-dom4-standards)
   * fully normalized `KeyboardEvent`, `MouseEvent` and the latest way to create `new Event('type')`
   * CSS `:scope` selector for any HTML Element (no `document` since useless, sorry)

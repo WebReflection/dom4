@@ -185,6 +185,7 @@
           }
         }
       },
+      // https://dom.spec.whatwg.org/#dom-element-toggleattribute
       'toggleAttribute', function toggleAttribute(name, force) {
         var had = this.hasAttribute(name);
         if (1 < arguments.length) {
@@ -197,6 +198,7 @@
           this.removeAttribute(name);
         else
           this.setAttribute(name, "");
+        return this.hasAttribute(name);
       },
       // WARNING - DEPRECATED - use .replaceWith() instead
       'replace', function replace() {
