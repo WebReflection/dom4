@@ -1,8 +1,8 @@
-src/*
-test/*
-template/*
+src/
+test/
+template/
 node_modules/*
-ie8/*
+ie8/
 build/*.amd.js
 Makefile
 index.html
@@ -11,5 +11,3 @@ bower.json
 package-lock.json
 .travis.yml
 testrunner.js
-template/license.after
-template/license.before
