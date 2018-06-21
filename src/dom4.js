@@ -721,7 +721,7 @@
         node.setAttribute(dataScope, null);
         var result = method.call(
           node,
-          css.replace(
+          String(css).replace(
             /(^|,\s*)(:scope([ >]|$))/g,
             function ($0, $1, $2, $3) {
               return $1 + '[' + dataScope + ']' + ($3 || ' ');

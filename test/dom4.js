@@ -611,6 +611,16 @@ wru.test([
         findInResult(result, div.childNodes[2]) &&
         findInResult(result, div.childNodes[3].childNodes[0])
       );
+
+      // should take any value as a string
+      result = div.querySelectorAll([':scope > p', ':scope li', 'h1', 'div > b']);
+      wru.assert('correct length', result.length === 4);
+      wru.assert('correct results',
+        findInResult(result, div.childNodes[0]) &&
+        findInResult(result, div.childNodes[1]) &&
+        findInResult(result, div.childNodes[2]) &&
+        findInResult(result, div.childNodes[3].childNodes[0])
+      );
     }
   }
 ]);
