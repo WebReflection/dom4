@@ -249,13 +249,16 @@ THE SOFTWARE.
     if (!(property in ElementPrototype)) {
       ElementPrototype[property] = properties[i - 1];
     }
-    if (property === 'remove') {
+    // avoid unnecessary re-patch when the script is included
+    // gazillion times without any reason whatsoever
+    // https://github.com/WebReflection/dom4/pull/48
+    if (property === 'remove' && !selectRemove._dom4) {
       // see https://github.com/WebReflection/dom4/issues/19
-      HTMLSelectElement.prototype[property] = function () {
+      (HTMLSelectElement.prototype[property] = function () {
         return 0 < arguments.length ?
           selectRemove.apply(this, arguments) :
           ElementPrototype.remove.call(this);
-      };
+      })._dom4 = true;
     }
     // see https://github.com/WebReflection/dom4/issues/18
     if (/^(?:before|after|replace|replaceWith|remove)$/.test(property)) {
