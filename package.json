@@ -2,7 +2,7 @@
   "name": "dom4",
   "title": "DOM4",
   "description": "a fully tested and covered polyfill for new DOM Level 4 entries",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "unpkg": "build/dom4.js",
   "main": "build/dom4.max.js",
   "homepage": "https://github.com/WebReflection/dom4",
