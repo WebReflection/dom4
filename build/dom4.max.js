@@ -249,13 +249,14 @@ THE SOFTWARE.
     if (!(property in ElementPrototype)) {
       ElementPrototype[property] = properties[i - 1];
     }
-    if (property === 'remove') {
+    if (property === 'remove' && HTMLSelectElement.prototype.removePolyfilled !== true) {
       // see https://github.com/WebReflection/dom4/issues/19
       HTMLSelectElement.prototype[property] = function () {
         return 0 < arguments.length ?
           selectRemove.apply(this, arguments) :
           ElementPrototype.remove.call(this);
       };
+      HTMLSelectElement.prototype.removePolyfilled = true;
     }
     // see https://github.com/WebReflection/dom4/issues/18
     if (/^(?:before|after|replace|replaceWith|remove)$/.test(property)) {
@@ -414,7 +415,7 @@ THE SOFTWARE.
             window[prefixes[i] + 'CancelRequestAnimationFrame'];
     }
     if (!cAF) {
-      // some FF apparently implemented rAF but no cAF 
+      // some FF apparently implemented rAF but no cAF
       if (rAF) {
         raf = rAF;
         rAF = function (callback) {
