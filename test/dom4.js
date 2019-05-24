@@ -128,7 +128,8 @@ wru.test([
       div.append(
         create('one'),
         'two',
-        create('three')
+        create('three'),
+        4
       );
       wru.assert(
         'works with multiple nodes',
@@ -137,7 +138,8 @@ wru.test([
         div.childNodes[2].nodeName.toLowerCase() === 'one' &&
         div.childNodes[3].nodeType !== 1 &&
         div.childNodes[3].nodeValue === 'two' &&
-        div.childNodes[4].nodeName.toLowerCase() === 'three'
+        div.childNodes[4].nodeName.toLowerCase() === 'three' &&
+        div.childNodes[5].nodeValue === '4'
       );
     }
   }, {
