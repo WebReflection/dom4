@@ -721,6 +721,7 @@
         return find(this, querySelectorAll, css);
       };
       function find(node, method, css) {
+        if (node.type != document.ELEMENT_NODE) return method.call(node, css);
         node.setAttribute(dataScope, null);
         var result = method.call(
           node,
